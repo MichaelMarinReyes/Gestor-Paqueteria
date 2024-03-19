@@ -1,0 +1,119 @@
+@startuml diagrama_de_clases
+package backend {
+    package principal {
+        class FuncionamientoPrincipal{
+            - administrador: Administrador
+            - operador: Operador
+            - recepcionista: Recepcionista
+            - cliente: Cliente
+        }
+
+
+    }
+
+
+    package roles {
+        class Usuario {
+            - int id
+            - String nombre
+            - String contraseña
+            - String tipo
+            + iniciarSesion(): void
+            + cerrarSesion(): void
+        }
+
+        class Administrador {
+            - Usuario usuario
+            - Ruta ruta
+            - double tarifaOperacionGlobal
+            + crearUsuario(): void
+            + eliminarUsuario(): void
+            + crearRuta(): void
+            + eliminarRuta(): void
+            + modificarTarifaGlobal(): void
+            + desactivarRuta(): void
+            + crearPuntoControl(): void
+            + eliminarrPuntoControl(): void
+            + modificarDatosPuntoControl(): void
+            + modificarCantidadPaquetesCola(): void
+        }
+
+
+        class Operador {
+            - PuntoControl puntosControlAsignados
+            + registrarTiempoPaquete(): void
+        }
+
+        class Recepcionista {
+            - int id
+            + registrarPaquete(): void
+            + facturar(): void
+            + crearCliente(): void
+            + consultarPaquetesCliente(): void
+        }
+
+        class Cliente {
+            - String nit
+            - String nombre
+            - String direccion
+        }
+
+        enum Rol {
+            ADMINISTRADOR
+            OPERADOR
+            CLIENTE
+        }
+
+        FuncionamientoPrincipal *-- Administrador
+        FuncionamientoPrincipal *-- Operador
+        FuncionamientoPrincipal *-- Recepcionista
+        FuncionamientoPrincipal *-- Cliente
+    }
+
+    package rutaspuntosdecontrol {
+        class Paquete {
+            - int id
+            - double peso
+            - String destino
+            - Cliente cliente
+            - Date tiempoEnPuntoDeControl
+            + calcularPrecio(): void
+        }
+
+        class PuntoControl {
+            - int id
+            - String nombre
+            - double tarifaOperacion
+            - int capacidadCola
+            - Ruta ruta
+            + modificarTarifaOperacion(): void
+            + modificarCapacidadCola(): void
+        }
+
+        class Ruta {
+            - int id
+            - String destino
+            - PuntoControl puntoControl
+            - boolean activa
+            + agregarPuntoControl(): void
+            + quitarPuntoContro(): void
+        }
+
+        class Destino {
+            - nombreDestino: String
+        }
+
+        Ruta *-- Destino
+    }
+
+    Administrador "extends"-up-> Usuario
+    Operador "extends"-up-> Usuario
+    Recepcionista "extends"-up-> Usuario
+    Ruta *-- PuntoControl
+    Operador --* PuntoControl
+    Recepcionista o-- Cliente
+    Recepcionista o-- Paquete
+    Ruta o-- Paquete
+    Rol *-- Usuario
+}
+
