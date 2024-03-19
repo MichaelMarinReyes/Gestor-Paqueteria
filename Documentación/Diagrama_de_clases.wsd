@@ -6,6 +6,7 @@ package backend {
             - operador: Operador
             - recepcionista: Recepcionista
             - cliente: Cliente
+            + mostrarReportes(): void
         }
 
 
@@ -14,9 +15,9 @@ package backend {
 
     package roles {
         class Usuario {
-            - int id
+            - int idUsuario
             - String nombre
-            - String contraseña
+            - String nit
             - String tipo
             + iniciarSesion(): void
             + cerrarSesion(): void
@@ -25,6 +26,7 @@ package backend {
         class Administrador {
             - Usuario usuario
             - Ruta ruta
+            - Operador operador
             - double tarifaOperacionGlobal
             + crearUsuario(): void
             + eliminarUsuario(): void
@@ -115,5 +117,39 @@ package backend {
     Recepcionista o-- Paquete
     Ruta o-- Paquete
     Rol *-- Usuario
+
+    package reportes {
+        class ReporteRuta  {
+            - Ruta nombreRuta
+            - int cantidadPaquetes
+            - boolean estadoRuta
+            + mostrarPaquetesActualmenteEnRuta(): void
+            + mostrarPaquetesFueraDeRuta(): void
+            + mostrarEstadoDeRuta(): void
+        }
+
+        class ReporteGanancias {
+            - Ruta nombreRuta
+            - Date fechaInicial
+            - Date fechaFinal
+            - double costo
+            - double ingresos
+            - double ganancias
+        }
+
+        class ReporteClientes {
+            - Cliente nombre
+            - String nit
+            - int paquetesEntregados
+        }
+
+        FuncionamientoPrincipal o-- ReporteRuta
+        FuncionamientoPrincipal o-- ReporteGanancias
+        FuncionamientoPrincipal o-- ReporteClientes
+    }
+
+    package dababases {
+
+    }
 }
 
