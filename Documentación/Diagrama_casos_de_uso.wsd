@@ -13,8 +13,8 @@ rectangle "Sistema de Registro\n(Clientes, Paquetes, Rutas, Ganancias)" {
     usecase "Desactivar Ruta" as DesactivarRuta
     usecase "Agregar Punto de Control" as AgregarPuntoControl
     usecase "Quitar Punto de Control" as QuitarPuntoControl
-    usecase "Configurar Tarifa de Operación" as ConfigTarifaOperacion
-    usecase "Configurar Cuota de Destino" as ConfigCuotaDestino
+    usecase "Configurar Tarifa de Operación" as ConfigurarTarifaOperacion
+    usecase "Configurar Cuota de Destino" as ConfigurarCuotaDestino
     usecase "Desactivar Usuario" as DesactivarUsuario
     usecase "Modificar Datos de Punto de Control" as ModificarDatosPuntoControl
 
@@ -23,8 +23,8 @@ rectangle "Sistema de Registro\n(Clientes, Paquetes, Rutas, Ganancias)" {
     Admin --> DesactivarRuta
     Admin --> AgregarPuntoControl
     Admin --> QuitarPuntoControl
-    Admin --> ConfigTarifaOperacion
-    Admin --> ConfigCuotaDestino
+    Admin --> ConfigurarTarifaOperacion
+    Admin --> ConfigurarCuotaDestino
     Admin --> DesactivarUsuario
     Admin --> ModificarDatosPuntoControl
 
