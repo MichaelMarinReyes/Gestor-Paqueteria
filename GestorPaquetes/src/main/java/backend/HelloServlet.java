@@ -1,4 +1,4 @@
-package backend.gestorpaquetes;
+package backend;
 
 import java.io.*;
 import jakarta.servlet.http.*;

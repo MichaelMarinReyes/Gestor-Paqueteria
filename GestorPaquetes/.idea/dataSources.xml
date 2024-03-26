@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="MySql Connection" uuid="d47bc719-7ccf-4ca2-82f4-6297c019e509">
+    <data-source source="LOCAL" name="gestor_paquetes@localhost" uuid="01bc3adb-3842-4d8c-95d3-2c91d5eed7a0">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
@@ -12,7 +12,6 @@
         <property name="com.intellij.clouds.kubernetes.db.container.port" />
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
-      <time-zone>UTC</time-zone>
     </data-source>
   </component>
 </project>
