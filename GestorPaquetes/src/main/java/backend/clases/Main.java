@@ -1,9 +1,10 @@
 package backend.clases;
 
-import backend.database.ConeccionMysql;
+import backend.clases.principal.FuncionamientoPrincipal;
 
 public class Main {
     public static void main(String[] args) {
-        ConeccionMysql coneccionMysql = new ConeccionMysql();
+        FuncionamientoPrincipal funcionamientoPrincipal = new FuncionamientoPrincipal();
+        funcionamientoPrincipal.mostrarClientes();
     }
 }
