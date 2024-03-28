@@ -26,7 +26,7 @@ public class FuncionamientoPrincipal {
             Statement insertStatement = connection.createStatement();
 
             Statement query = connection.createStatement();
-            ResultSet resultQuery = query.executeQuery("SELECT * from usuario");
+            ResultSet resultQuery = query.executeQuery("SELECT * from usuario;");
 
 
             System.out.println("imprimir los datos de la tabla");
@@ -70,7 +70,7 @@ public class FuncionamientoPrincipal {
     public void editarCliente(String nit) {
         Connection connection = conexion.conectar();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("update usuario set nombre = '" + nit + "' where nit = '" + nit + "'");
+            PreparedStatement preparedStatement = connection.prepareStatement("update usuario set nombre = '" + nit + "' where nit = '" + nit + "';");
         } catch (SQLException e) {
             System.out.println("Error al editar cliente " + e.getMessage());
         }
@@ -82,7 +82,7 @@ public class FuncionamientoPrincipal {
     public void crearOperadores(String idPuntocontrol, String nombre, String apellido, String contraseña) {
         Connection connection = conexion.conectar();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("insert into operador (id_punto_control, nombre, apellido, contraseña) values (" + idPuntocontrol + ", " + nombre + ", " + apellido + ", " + contraseña);
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into operador (id_punto_control, nombre, apellido, contraseña) values (" + idPuntocontrol + ", " + nombre + ", " + apellido + ", " + contraseña + ";");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -100,7 +100,7 @@ public class FuncionamientoPrincipal {
     public void crearDestino(int idDestino, String nombre, double cuotaDestino) {
         Connection connection = conexion.conectar();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("insert into destino (id_destino, nombre, cuota_destino) values (" + idDestino + ", " + nombre + ", " + cuotaDestino);
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into destino (id_destino, nombre, cuota_destino) values (" + idDestino + ", " + nombre + ", " + cuotaDestino + ";");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -108,5 +108,59 @@ public class FuncionamientoPrincipal {
         }
     }
 
+    /**
+     * Verifica el usuario y contraseña del cliente
+     *
+     * @return
+     */
+    public boolean verificarUsuario(String nit, String contraseña) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = conexion.conectar();
+            if (connection != null) {
+                System.out.println("Conexión a la base de datos establecida correctamente.");
+
+                String sql = "SELECT * FROM usuario WHERE nit = ? AND contraseña = ?";
+                System.out.println("SQL generado: " + sql); // Agregar este mensaje para verificar el SQL generado
+
+                preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, nit);
+                preparedStatement.setString(2, contraseña);
+                resultSet = preparedStatement.executeQuery();
+
+                // Si se encuentra al menos una fila, las credenciales son válidas
+                if (resultSet.next()) {
+                    System.out.println("Credenciales válidas para el usuario con nit: " + nit);
+                    return true;
+                } else {
+                    System.out.println("Credenciales inválidas para el usuario con nit: " + nit);
+                }
+            } else {
+                System.out.println("No se pudo establecer conexión a la base de datos.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al verificar credenciales: " + e.getMessage());
+        } finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    System.out.println("Error al cerrar ResultSet: " + e.getMessage());
+                }
+            }
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    System.out.println("Error al cerrar PreparedStatement: " + e.getMessage());
+                }
+            }
+            conexion.desconectar();
+        }
+        return false;
+    }
 
 }
