@@ -3,7 +3,7 @@
     <h1>Iniciar sesión</h1>
     <form @submit.prevent="login">
       <div class="form-group">
-        <label for="username">Nit:</label>
+        <label for="username">Usuario:</label>
         <input type="text" id="username" v-model="username" required>
       </div>
       <div class="form-group">
@@ -12,13 +12,14 @@
       </div>
       <button type="submit">Iniciar sesión</button>
     </form>
-    <p v-if="loggedIn">¡Bienvenido, {{ username }}!</p>
+    <p v-if="loggedIn">¡Bienvenido, !</p>
     <p v-else-if="loginFailed" class="error-msg">Credenciales inválidas. Por favor, inténtalo de nuevo.</p>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -29,31 +30,21 @@ export default {
     };
   },
   methods: {
-    login() {
-      const userData = {
-        usuario: this.username,
-        contraseña: this.password
-      };
-
-      // Realiza una solicitud POST al servlet Login con los datos de inicio de sesión
-      axios.post('/login', userData)
-          .then(response => {
-            // Si la solicitud es exitosa, verifica la respuesta del servidor
-            if (response.data === 'success') {
-              // Inicio de sesión exitoso
-              this.loggedIn = true;
-              this.loginFailed = false;
-            } else {
-              // Inicio de sesión fallido
-              this.loggedIn = false;
-              this.loginFailed = true;
-            }
-          })
-          .catch(error => {
-            console.error('Error al iniciar sesión:', error);
-            this.loggedIn = false;
-            this.loginFailed = true;
-          });
+    async login() {
+      try {
+        const response = await axios.post('/login', {
+          usuario: this.username,
+          contraseña: this.password
+        });
+        if (response.data === 'success') {
+          this.loggedIn = true;
+        } else {
+          this.loginFailed = true;
+        }
+      } catch (error) {
+        console.error('Error al iniciar sesión:', error);
+        this.loginFailed = true;
+      }
     }
   }
 };

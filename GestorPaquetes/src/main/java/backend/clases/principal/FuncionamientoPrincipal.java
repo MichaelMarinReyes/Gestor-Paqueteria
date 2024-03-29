@@ -162,4 +162,15 @@ public class FuncionamientoPrincipal {
         return false;
     }
 
+    public String obtenerRolUsuario(String usuasrio, String contraseña) {
+        Connection connection = conexion.conectar();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from usuario where nit = ? and constraseña = ?");
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return "";
+    }
+
 }
