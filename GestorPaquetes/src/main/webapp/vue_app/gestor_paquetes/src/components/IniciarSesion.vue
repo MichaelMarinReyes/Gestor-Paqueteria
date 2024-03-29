@@ -18,7 +18,6 @@
 </template>
 
 <script>
-
 import axios from 'axios';
 export default {
   data() {
@@ -51,7 +50,6 @@ export default {
             }
           })
           .catch(error => {
-            // Maneja cualquier error de la solicitud
             console.error('Error al iniciar sesión:', error);
             this.loggedIn = false;
             this.loginFailed = true;

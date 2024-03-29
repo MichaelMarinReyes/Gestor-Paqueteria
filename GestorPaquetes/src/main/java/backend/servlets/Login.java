@@ -18,7 +18,6 @@ public class Login extends HttpServlet {
         String usuario = request.getParameter("usuario");
         String contraseña = request.getParameter("contraseña");
 
-        // Crea un escritor para enviar la respuesta al cliente
         PrintWriter out = response.getWriter();
 
         // Llama al método verificarUsuario de tu lógica principal para validar las credenciales

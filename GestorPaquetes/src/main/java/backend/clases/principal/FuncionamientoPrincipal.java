@@ -40,7 +40,6 @@ public class FuncionamientoPrincipal {
         } catch (SQLException e) {
             System.out.println("ERROR al mostrar clientes " + e.getMessage());
         }
-
     }
 
     /**
