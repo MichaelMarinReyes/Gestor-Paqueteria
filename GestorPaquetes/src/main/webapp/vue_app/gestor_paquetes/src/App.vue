@@ -1,7 +1,7 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
-  <IniciarSesion msg="Bienvenido a envíos de paquete"/>
-</template>
+  <IniciarSesion msg="Bienvenido a gestor de paquetes."/>
+  </template>
 
 <script>
 

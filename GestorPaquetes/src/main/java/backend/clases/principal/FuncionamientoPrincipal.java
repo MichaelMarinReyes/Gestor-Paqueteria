@@ -112,7 +112,7 @@ public class FuncionamientoPrincipal {
      *
      * @return
      */
-    public boolean verificarUsuario(String nit, String contraseña) {
+    public boolean verificarUsuario(String usuario, String contraseña) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -122,21 +122,40 @@ public class FuncionamientoPrincipal {
             if (connection != null) {
                 System.out.println("Conexión a la base de datos establecida correctamente.");
 
-                String sql = "SELECT * FROM usuario WHERE nit = ? AND contraseña = ?";
-                System.out.println("SQL generado: " + sql); // Agregar este mensaje para verificar el SQL generado
-
+                String sql = "SELECT * FROM administrador WHERE id_administrador = ? AND contraseña = ?";
                 preparedStatement = connection.prepareStatement(sql);
-                preparedStatement.setString(1, nit);
+                preparedStatement.setString(1, usuario);
                 preparedStatement.setString(2, contraseña);
                 resultSet = preparedStatement.executeQuery();
 
-                // Si se encuentra al menos una fila, las credenciales son válidas
                 if (resultSet.next()) {
-                    System.out.println("Credenciales válidas para el usuario con nit: " + nit);
+                    System.out.println("Credenciales válidas para el administrador con usuario: " + usuario);
                     return true;
-                } else {
-                    System.out.println("Credenciales inválidas para el usuario con nit: " + nit);
                 }
+
+                sql = "SELECT * FROM operador WHERE id_operador = ? AND contraseña = ?";
+                preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, usuario);
+                preparedStatement.setString(2, contraseña);
+                resultSet = preparedStatement.executeQuery();
+
+                if (resultSet.next()) {
+                    System.out.println("Credenciales válidas para el operador con usuario: " + usuario);
+                    return true;
+                }
+
+                sql = "SELECT * FROM recepcionista WHERE id_recepcionista = ? AND contraseña = ?";
+                preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, usuario);
+                preparedStatement.setString(2, contraseña);
+                resultSet = preparedStatement.executeQuery();
+
+                if (resultSet.next()) {
+                    System.out.println("Credenciales válidas para el recepcionista con usuario: " + usuario);
+                    return true;
+                }
+
+                System.out.println("Credenciales inválidas para el usuario con usuario: " + usuario);
             } else {
                 System.out.println("No se pudo establecer conexión a la base de datos.");
             }
@@ -172,5 +191,7 @@ public class FuncionamientoPrincipal {
         }
         return "";
     }
+
+
 
 }

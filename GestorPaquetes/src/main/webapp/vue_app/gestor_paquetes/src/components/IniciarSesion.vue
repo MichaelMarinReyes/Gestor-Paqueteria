@@ -4,16 +4,16 @@
     <form @submit.prevent="login">
       <div class="form-group">
         <label for="username">Usuario:</label>
-        <input type="text" id="username" v-model="username" required>
+        <input type="text" id="username" v-model="usuario" required>
       </div>
       <div class="form-group">
         <label for="password">Contraseña:</label>
-        <input type="password" id="password" v-model="password" required>
+        <input type="password" id="password" v-model="contraseña" required>
       </div>
       <button type="submit">Iniciar sesión</button>
     </form>
-    <p v-if="loggedIn">¡Bienvenido, !</p>
-    <p v-else-if="loginFailed" class="error-msg">Credenciales inválidas. Por favor, inténtalo de nuevo.</p>
+    <p v-if="sesionValida">¡Bienvenido, !</p>
+    <p v-else-if="sesionInvalida" class="error-msg">Credenciales inválidas. Por favor, inténtalo de nuevo.</p>
   </div>
 </template>
 
@@ -21,29 +21,31 @@
 import axios from 'axios';
 
 export default {
+  name: 'IniciarSesion',
   data() {
     return {
-      username: '',
-      password: '',
-      loggedIn: false,
-      loginFailed: false
+      usuario: '',
+      contraseña: '',
+      sesionValida: false,
+      sesionInvalida: false
     };
   },
   methods: {
     async login() {
       try {
+        console.log('Datos de inicio de sesión:', { usuario: this.usuario, contraseña: this.contraseña });
         const response = await axios.post('/login', {
-          usuario: this.username,
-          contraseña: this.password
+          usuario: this.usuario,
+          contraseña: this.contraseña
         });
         if (response.data === 'success') {
-          this.loggedIn = true;
+          this.sesionValida = true;
         } else {
-          this.loginFailed = true;
+          this.sesionInvalida = true;
         }
       } catch (error) {
         console.error('Error al iniciar sesión:', error);
-        this.loginFailed = true;
+        this.sesionInvalida = true;
       }
     }
   }
