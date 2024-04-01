@@ -17,25 +17,23 @@ package backend {
         class Usuario {
             - int idUsuario
             - String nombre
-            - String nit
             - String tipo
             + iniciarSesion(): void
             + cerrarSesion(): void
         }
 
         class Administrador {
-            - Usuario usuario
+            - Cliente cliente
             - Ruta ruta
             - Operador operador
             - double tarifaOperacionGlobal
-            + crearUsuario(): void
-            + eliminarUsuario(): void
+            + crearCliente(): void
+            + desactivarCliente(): void
             + crearRuta(): void
-            + eliminarRuta(): void
-            + modificarTarifaGlobal(): void
             + desactivarRuta(): void
+            + modificarTarifaGlobal(): void
             + crearPuntoControl(): void
-            + eliminarrPuntoControl(): void
+            + desactivarPuntoContol(): void
             + modificarDatosPuntoControl(): void
             + modificarCantidadPaquetesCola(): void
         }
