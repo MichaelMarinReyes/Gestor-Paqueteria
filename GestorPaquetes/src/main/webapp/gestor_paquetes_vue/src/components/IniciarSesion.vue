@@ -1,27 +1,27 @@
 <template>
-  <div class="login-container">
+  <div class="contenedor-login">
     <h1>Iniciar sesión</h1>
-    <form @submit.prevent="login">
-      <div class="form-group">
-        <label for="username">Usuario:</label>
-        <input type="text" id="username" v-model="usuario" required>
+    <form @submit.prevent="iniciarSesion">
+      <div class="grupo-formulario">
+        <label for="usuario">Usuario:</label>
+        <input type="text" id="usuario" v-model="usuario" required>
       </div>
-      <div class="form-group">
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" v-model="contraseña" required>
+      <div class="grupo-formulario">
+        <label for="contraseña">Contraseña:</label>
+        <input type="password" id="contraseña" v-model="contraseña" required>
       </div>
-      <div class="form-group">
-        <label for="user-type">Tipo de usuario:</label>
-        <select id="user-type" v-model="tipoUsuario">
+      <div class="grupo-formulario">
+        <label for="rol-usuario">Rol de usuario:</label>
+        <select id="rol-usuario" v-model="rol">
           <option value="admin">Administrador</option>
-          <option value="operator">Operador</option>
-          <option value="receptionist">Recepcionista</option>
+          <option value="operador">Operador</option>
+          <option value="recepcionista">Recepcionista</option>
         </select>
       </div>
       <button type="submit">Iniciar sesión</button>
     </form>
-    <p v-if="sesionValida">¡Bienvenido, !</p>
-    <p v-else-if="sesionInvalida" class="error-msg">Credenciales inválidas. Por favor, inténtalo de nuevo.</p>
+    <p v-if="sesionValida">¡Bienvenido!</p>
+    <p v-else-if="sesionInvalida" class="mensaje-error">Credenciales inválidas. Por favor, inténtalo de nuevo.</p>
   </div>
 </template>
 
@@ -34,25 +34,25 @@ export default {
     return {
       usuario: '',
       contraseña: '',
-      tipoUsuario: 'admin',
+      rol: 'admin',
       sesionValida: false,
       sesionInvalida: false
     };
   },
   methods: {
-    async login() {
+    async iniciarSesion() {
       try {
         console.log('Datos de inicio de sesión:', {
           usuario: this.usuario,
           contraseña: this.contraseña,
-          tipoUsuario: this.tipoUsuario
+          rol: this.rol
         });
-        const response = await axios.post('/login/*', {
+        const respuesta = await axios.post('http://localhost:8090/login', {
           usuario: this.usuario,
           contraseña: this.contraseña,
-          tipoUsuario: this.tipoUsuario
+          rol: this.rol
         });
-        if (response.data === 'success') {
+        if (respuesta.data === 'success') {
           this.sesionValida = true;
         } else {
           this.sesionInvalida = true;
@@ -67,7 +67,7 @@ export default {
 </script>
 
 <style scoped>
-.login-container {
+.contenedor-login {
   max-width: 400px;
   margin: auto;
   padding: 20px;
@@ -76,7 +76,7 @@ export default {
   background-color: #f9f9f9;
 }
 
-.form-group {
+.grupo-formulario {
   margin-bottom: 15px;
 }
 
@@ -107,7 +107,7 @@ button:hover {
   background-color: #0056b3;
 }
 
-.error-msg {
+.mensaje-error {
   color: red;
 }
 </style>

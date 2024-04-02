@@ -12,7 +12,7 @@ public class LoginDao {
         try {
             Connection connection = ConexionDB.getInstancia().conectar();
 
-            if (tipoUsuario.equalsIgnoreCase("administrador")) {
+            if (tipoUsuario.equalsIgnoreCase("admin")) {
                 PreparedStatement preparedStatement = connection.prepareStatement(queryAdmin);
                 preparedStatement.setString(1, usuario);
                 preparedStatement.setString(2, contraseña);
