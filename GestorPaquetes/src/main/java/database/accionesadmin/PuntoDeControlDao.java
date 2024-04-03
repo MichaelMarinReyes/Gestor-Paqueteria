@@ -92,31 +92,6 @@ public class PuntoDeControlDao {
         }
     }
 
-    public PuntoDeControl obtenerPuntoControlPorId(int id) {
-        System.out.println(id);
-        PuntoDeControl puntoControl = null;
-        String query = "select * from punto_de_control where id_punto_control = = ?";
-        try  {
-            Connection connection = ConexionDB.getInstancia().conectar();
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1, id);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    puntoControl = new PuntoDeControl();
-                    System.out.println(puntoControl);
-                    puntoControl.setIdPuntoControl(resultSet.getInt("id_punto_control"));
-                    puntoControl.setNombre(resultSet.getString("nombre"));
-                    puntoControl.setIdOperador(resultSet.getInt("id_operador"));
-                    puntoControl.setIdPaquete(resultSet.getInt("id_paquete"));
-                    puntoControl.setPaquetesEnCola(resultSet.getInt("paquetes_en_cola"));
-                    puntoControl.setTarifaOperacion(resultSet.getDouble("tarifa_operacion"));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return puntoControl;
-    }
 
     public void actualizarPuntoControl(PuntoDeControl puntoControl) {
         String query = "UPDATE punto_de_control SET nombre = ?, id_operador = ?, id_paquete = ?, paquetes_en_cola = ?, tarifa_operacion = ? WHERE id_punto_control = ?";

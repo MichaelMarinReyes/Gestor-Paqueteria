@@ -33,14 +33,21 @@ public class ServicioAdministrador {
         }
     }
 
-    public void editarPuntoControl(int id) throws ExcepcionApi {
-        PuntoDeControl puntoDeControl = puntoDeControlDao.obtenerPuntoControl(id);
+    public void editarPuntoControl(PuntoDeControl puntoDeControlEntidad) throws ExcepcionApi {
+        PuntoDeControl puntoDeControl = puntoDeControlDao.obtenerPuntoControl(puntoDeControlEntidad.getIdPuntoControl());
         if (puntoDeControl != null) {
+            puntoDeControl.setNombre(puntoDeControlEntidad.getNombre());
+            puntoDeControl.setIdOperador(puntoDeControlEntidad.getIdOperador());
+            puntoDeControl.setIdPaquete(puntoDeControlEntidad.getIdPaquete());
+            puntoDeControl.setPaquetesEnCola(puntoDeControlEntidad.getPaquetesEnCola());
+            puntoDeControl.setTarifaOperacion(puntoDeControlEntidad.getTarifaOperacion());
+
             puntoDeControlDao.actualizarPuntoControl(puntoDeControl);
         } else {
             throw ExcepcionApi.builder().code(HttpServletResponse.SC_NOT_FOUND).mensaje("Punto de control no existe").build();
         }
     }
+
 
     public PuntoDeControl obtenerPuntoControl(int id) throws ExcepcionApi {
         PuntoDeControl puntoDeControl = puntoDeControlDao.obtenerPuntoControl(id);

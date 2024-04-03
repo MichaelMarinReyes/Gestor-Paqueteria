@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import servicios.ServicioAdministrador;
 import util.ExcepcionApi;
+
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -53,26 +55,42 @@ public class PuntoControlServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //MODIFICAR
-        String idParametro = req.getParameter("idPuntoControl");
-        System.out.println(idParametro);
-        if (idParametro != null && !idParametro.isEmpty()) {
-            int idPuntoControl = Integer.parseInt(idParametro);
+        try {
+            Gson gson = new Gson();
+            BufferedReader reader = req.getReader();
+            PuntoDeControl puntoDeControl = gson.fromJson(reader, PuntoDeControl.class);
+
             try {
-                servicioAdministrador.editarPuntoControl(idPuntoControl);
+                servicioAdministrador.editarPuntoControl(puntoDeControl);
+                resp.setStatus(HttpServletResponse.SC_OK);
             } catch (ExcepcionApi e) {
                 throw new RuntimeException(e);
             }
-            resp.setStatus(HttpServletResponse.SC_OK);
-        } else {
-            System.out.println("Error 404");
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        } catch (Exception e) {
+            // Manejar errores al parsear el JSON
+            this.sendError(resp, ExcepcionApi.builder()
+                    .code(HttpServletResponse.SC_BAD_REQUEST)
+                    .mensaje("Error al procesar el JSON: " + e.getMessage())
+                    .build());
         }
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        String idParametro = req.getParameter("idPuntoControl");
+        if (idParametro != null && !idParametro.isEmpty()) {
+            int idPuntoControl = Integer.parseInt(idParametro);
+            PuntoDeControl puntoControl = puntoControlDao.obtenerPuntoControl(idPuntoControl);
+            if (puntoControl != null) {
+                try {
+                    servicioAdministrador.eliminarPuntoControl(puntoControl.getIdPuntoControl());
+                } catch (ExcepcionApi e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            }
+        }
     }
 
     private void sendResponse(HttpServletResponse resp, Object object) throws IOException {
