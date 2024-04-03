@@ -18,14 +18,15 @@ public class PuntoDeControlDao {
                 PuntoDeControl puntoDeControl = new PuntoDeControl();
                 puntoDeControl.setIdPuntoControl(resultSet.getInt("id_punto_control"));
                 puntoDeControl.setNombre(resultSet.getString("nombre"));
-
+/*
                 Statement statementNombre = ConexionDB.getInstancia().conectar().createStatement();
-                ResultSet resultSetNombre = statementNombre.executeQuery("select nombre from punto_de_control;");
+                ResultSet resultSetNombre = statementNombre.executeQuery("select nombre from operador;");
                 String nombre = " ";
-                if (resultSet.getString("id_operador") != null) {
-                    nombre = resultSetNombre.getString("id_operador");
+
+                if (resultSetNombre.getString("id_operador") != null || (resultSetNombre.getString("id_operador").equals("0"))) {
+                    nombre = resultSet.getString("id_operador");
                 }
-                puntoDeControl.setNombreOperador(nombre);
+                puntoDeControl.setNombreOperador(nombre);*/
                 puntoDeControl.setIdPaquete(resultSet.getInt("id_paquete"));
                 puntoDeControl.setPaquetesEnCola(resultSet.getInt("paquetes_en_cola"));
                 puntoDeControl.setTarifaOperacion(resultSet.getDouble("tarifa_operacion"));
@@ -38,7 +39,6 @@ public class PuntoDeControlDao {
     }
 
     public PuntoDeControl obtenerPuntoControl(int id) {
-        System.out.println(id);
         PuntoDeControl puntoControl = null;
         String query = "select * from punto_de_control where id_punto_control = ?;";
         try {
@@ -50,7 +50,7 @@ public class PuntoDeControlDao {
                     puntoControl = new PuntoDeControl();
                     puntoControl.setIdPuntoControl(resultSet.getInt("id_punto_control"));
                     puntoControl.setNombre(resultSet.getString("nombre"));
-
+/*
                     Statement statementNombre = ConexionDB.getInstancia().conectar().createStatement();
                     ResultSet resultSetNombre = statementNombre.executeQuery("select nombre from punto_de_control;");
                     String nombre = " ";
@@ -58,6 +58,7 @@ public class PuntoDeControlDao {
                         nombre = resultSetNombre.getString("id_operador");
                     }
                     puntoControl.setNombreOperador(nombre);
+                    puntoControl.setNombreOperador(resultSetNombre.);*/
                     puntoControl.setIdPaquete(resultSet.getInt("id_paquete"));
                     puntoControl.setPaquetesEnCola(resultSet.getInt("paquetes_en_cola"));
                     puntoControl.setTarifaOperacion(resultSet.getDouble("tarifa_operacion"));
@@ -68,6 +69,7 @@ public class PuntoDeControlDao {
         }
         return puntoControl;
     }
+
 
     public PuntoDeControl crearPuntoControl(PuntoDeControl puntoControl) {
         String query = "insert into punto_de_control (nombre, id_operador, id_paquete, paquetes_en_cola, tarifa_operacion) VALUES (?, ?, ?, ?, ?)";
@@ -90,6 +92,31 @@ public class PuntoDeControlDao {
         }
     }
 
+    public PuntoDeControl obtenerPuntoControlPorId(int id) {
+        System.out.println(id);
+        PuntoDeControl puntoControl = null;
+        String query = "select * from punto_de_control where id_punto_control = = ?";
+        try  {
+            Connection connection = ConexionDB.getInstancia().conectar();
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    puntoControl = new PuntoDeControl();
+                    System.out.println(puntoControl);
+                    puntoControl.setIdPuntoControl(resultSet.getInt("id_punto_control"));
+                    puntoControl.setNombre(resultSet.getString("nombre"));
+                    puntoControl.setIdOperador(resultSet.getInt("id_operador"));
+                    puntoControl.setIdPaquete(resultSet.getInt("id_paquete"));
+                    puntoControl.setPaquetesEnCola(resultSet.getInt("paquetes_en_cola"));
+                    puntoControl.setTarifaOperacion(resultSet.getDouble("tarifa_operacion"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return puntoControl;
+    }
 
     public void actualizarPuntoControl(PuntoDeControl puntoControl) {
         String query = "UPDATE punto_de_control SET nombre = ?, id_operador = ?, id_paquete = ?, paquetes_en_cola = ?, tarifa_operacion = ? WHERE id_punto_control = ?";
