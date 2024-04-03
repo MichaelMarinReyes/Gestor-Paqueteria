@@ -8,22 +8,23 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import servicios.ServicioAdministrador;
 import util.ExcepcionApi;
-
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 
 @WebServlet(name = "gestionar-puntos-de-control", urlPatterns = "/gestionar-puntos-de-control/*")
 public class PuntoControlServlet extends HttpServlet {
     private final PuntoDeControlDao puntoControlDao = new PuntoDeControlDao();
+    private ServicioAdministrador servicioAdministrador = new ServicioAdministrador();
     private final Gson gson = new Gson();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String idParametro = req.getParameter("id");
+        String idParametro = req.getParameter("idPuntoControl");
         if (idParametro != null && !idParametro.isEmpty()) {
             int idPuntoControl = Integer.parseInt(idParametro);
-            PuntoDeControl puntoControl = puntoControlDao.obtenerPuntoControlPorId(idPuntoControl);
+            PuntoDeControl puntoControl = puntoControlDao.obtenerPuntoControl(idPuntoControl);
             if (puntoControl != null) {
                 resp.setContentType("application/json");
                 resp.setCharacterEncoding("UTF-8");
@@ -32,10 +33,7 @@ public class PuntoControlServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
         } else {
-            List<PuntoDeControl> puntosControl = puntoControlDao.obtenerTodosLosPuntosControl();
-            resp.setContentType("application/json");
-            resp.setCharacterEncoding("UTF-8");
-            resp.getWriter().write(gson.toJson(puntosControl));
+            this.sendResponse(resp, servicioAdministrador.obtenerPuntosDeControl());
         }
     }
 
@@ -44,9 +42,9 @@ public class PuntoControlServlet extends HttpServlet {
         try {
             Gson gson = new Gson();
             PuntoDeControl puntoDeControl = gson.fromJson(req.getReader(), PuntoDeControl.class);
-            this.enviarResponse(resp, puntoControlDao.crearPuntoControl(puntoDeControl));
+            this.sendResponse(resp, puntoControlDao.crearPuntoControl(puntoDeControl));
         } catch (Exception e) {
-            this.enviarError(resp, ExcepcionApi.builder()
+            this.sendError(resp, ExcepcionApi.builder()
                     .code(HttpServletResponse.SC_INTERNAL_SERVER_ERROR)
                     .mensaje(e.getMessage())
                     .build());
@@ -55,7 +53,21 @@ public class PuntoControlServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        //MODIFICAR
+        String idParametro = req.getParameter("idPuntoControl");
+        System.out.println(idParametro);
+        if (idParametro != null && !idParametro.isEmpty()) {
+            int idPuntoControl = Integer.parseInt(idParametro);
+            try {
+                servicioAdministrador.editarPuntoControl(idPuntoControl);
+            } catch (ExcepcionApi e) {
+                throw new RuntimeException(e);
+            }
+            resp.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            System.out.println("Error 404");
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
     }
 
     @Override
@@ -63,14 +75,14 @@ public class PuntoControlServlet extends HttpServlet {
 
     }
 
-    private void enviarResponse(HttpServletResponse resp, Object object) throws IOException {
+    private void sendResponse(HttpServletResponse resp, Object object) throws IOException {
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_OK);
         PrintWriter out = resp.getWriter();
         out.println(new Gson().toJson(object));
     }
 
-    private void enviarError(HttpServletResponse resp, ExcepcionApi e) throws IOException {
+    private void sendError(HttpServletResponse resp, ExcepcionApi e) throws IOException {
         resp.setContentType("application/json");
         resp.sendError(e.getCode(), e.getMessage());
     }

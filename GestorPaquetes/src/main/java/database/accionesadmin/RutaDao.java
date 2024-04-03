@@ -1,36 +1,35 @@
 package database.accionesadmin;
 
+import clases.puntosdecontrorutaydestino.PuntoDeControl;
 import clases.puntosdecontrorutaydestino.Ruta;
 import database.ConexionDB;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RutaDao {
 
-    public Ruta(Ruta ruta) {
-        String query = "select * from ruta";
-
-        try {
-            try {
-                PreparedStatement preparedStatement =  ConexionDB.getInstancia().conectar().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-                /*preparedStatement.setString(1, ruta.getNombreRuta());
-                preparedStatement.setInt(2, ruta.getIdOperador());
-                preparedStatement.setInt(3, ruta.getIdPaquete());
-                preparedStatement.setInt(4, ruta.getPaquetesEnCola());
-                preparedStatement.setDouble(5, ruta.getTarifaOperacion());
-                preparedStatement.execute();
-                ResultSet resultSet = preparedStatement.getGeneratedKeys();
-                if (resultSet.next()) {
-                    puntoControl.setIdPuntoControl(resultSet.getInt(1));
-                    return puntoControl;*/
-                }
-                return null;
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+    public List<PuntoDeControl> obtenerTodosLosPuntosControl() {
+        List<PuntoDeControl> puntosControl = new ArrayList<>();
+        String query = "SELECT * FROM ruta";
+        try (Connection connection = ConexionDB.getInstancia().conectar();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                PuntoDeControl puntoControl = new PuntoDeControl();
+                puntoControl.setIdPuntoControl(resultSet.getInt("id_punto_control"));
+                puntoControl.setNombre(resultSet.getString("nombre"));
+                puntoControl.setIdOperador(resultSet.getInt("id_operador"));
+                puntoControl.setIdPaquete(resultSet.getInt("id_paquete"));
+                puntoControl.setPaquetesEnCola(resultSet.getInt("paquetes_en_cola"));
+                puntoControl.setTarifaOperacion(resultSet.getDouble("tarifa_operacion"));
+                puntosControl.add(puntoControl);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return puntosControl;
     }
+
 }
