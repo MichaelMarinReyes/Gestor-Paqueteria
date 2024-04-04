@@ -14,13 +14,30 @@ import java.io.IOException;
 
 @WebServlet(name = "login", urlPatterns = "/login/*")
 public class LoginServlet extends HttpServlet {
+    //private CorsFilter
     private LoginDao loginDao = new LoginDao();
 
     //OBTENER UN RECURSO
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("GET EJECUTANDOSE");
-        System.out.println(req.getPathInfo());
+
+        BufferedReader reader = req.getReader();
+        Gson gson = new Gson();
+        Administrador administrador = gson.fromJson(reader, Administrador.class);
+
+        int usuario = administrador.getIdAdministrador();
+        String contraseña = administrador.getContraseña();
+        String rol = administrador.getRol();
+        boolean credencialesValidas = loginDao.verificarCredenciales(String.valueOf(usuario), contraseña, rol);
+
+        if (credencialesValidas) {
+            resp.setStatus(HttpServletResponse.SC_OK);
+            //resp.getContentType("aqui se redirige a la correspondiente");
+            resp.getWriter().write("/admin");
+        } else {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            resp.getWriter().write("Credenciales inválidas. Por favor, inténtalo de nuevo.");
+        }
     }
 
     //GUARDAR UN RECURSO

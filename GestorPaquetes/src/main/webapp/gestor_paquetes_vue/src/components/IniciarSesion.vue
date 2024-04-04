@@ -47,7 +47,7 @@ export default {
           contraseña: this.contraseña,
           rol: this.rol
         });
-        const respuesta = await axios.post('http://localhost:8090/login', {
+        const respuesta = await axios.get('http://localhost:8090/login', {
           usuario: this.usuario,
           contraseña: this.contraseña,
           rol: this.rol

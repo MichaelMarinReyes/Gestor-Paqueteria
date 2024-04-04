@@ -1,8 +1,8 @@
 package controladoresservlets;
 
-import clases.puntosdecontrorutaydestino.PuntoDeControl;
+import clases.puntosdecontrorutaydestino.Ruta;
 import com.google.gson.Gson;
-import database.accionesadmin.PuntoDeControlDao;
+import database.accionesadmin.RutaDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,27 +15,27 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "gestionar-puntos-de-control", urlPatterns = "/gestionar-puntos-de-control/*")
-public class PuntoControlServlet extends HttpServlet {
-    private final PuntoDeControlDao puntoControlDao = new PuntoDeControlDao();
+@WebServlet(name = "ruta", urlPatterns = "/ruta/*")
+public class RutaServlet extends HttpServlet {
+    private RutaDao rutaDao = new RutaDao();
     private ServicioAdministrador servicioAdministrador = new ServicioAdministrador();
     private final Gson gson = new Gson();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String idParametro = req.getParameter("idPuntoControl");
+        String idParametro = req.getParameter("idRuta");
         if (idParametro != null && !idParametro.isEmpty()) {
-            int idPuntoControl = Integer.parseInt(idParametro);
-            PuntoDeControl puntoControl = puntoControlDao.obtenerPuntoControl(idPuntoControl);
-            if (puntoControl != null) {
+            int idRuta = Integer.parseInt(idParametro);
+            Ruta ruta = rutaDao.obtenerRuta(idRuta);
+            if (ruta != null) {
                 resp.setContentType("application/json");
                 resp.setCharacterEncoding("UTF-8");
-                resp.getWriter().write(gson.toJson(puntoControl));
+                resp.getWriter().write(gson.toJson(ruta));
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
         } else {
-            this.sendResponse(resp, servicioAdministrador.obtenerPuntosDeControl());
+            this.sendResponse(resp, servicioAdministrador.obtenerRutas());
         }
     }
 
@@ -43,8 +43,8 @@ public class PuntoControlServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             Gson gson = new Gson();
-            PuntoDeControl puntoDeControl = gson.fromJson(req.getReader(), PuntoDeControl.class);
-            this.sendResponse(resp, puntoControlDao.crearPuntoControl(puntoDeControl));
+            Ruta ruta = gson.fromJson(req.getReader(), Ruta.class);
+            this.sendResponse(resp, rutaDao.crearRuta(ruta));
         } catch (Exception e) {
             this.sendError(resp, ExcepcionApi.builder()
                     .code(HttpServletResponse.SC_INTERNAL_SERVER_ERROR)
@@ -58,14 +58,9 @@ public class PuntoControlServlet extends HttpServlet {
         try {
             Gson gson = new Gson();
             BufferedReader reader = req.getReader();
-            PuntoDeControl puntoDeControl = gson.fromJson(reader, PuntoDeControl.class);
-
-            try {
-                servicioAdministrador.editarPuntoControl(puntoDeControl);
-                resp.setStatus(HttpServletResponse.SC_OK);
-            } catch (ExcepcionApi e) {
-                throw new RuntimeException(e);
-            }
+            Ruta ruta = gson.fromJson(reader, Ruta.class);
+            servicioAdministrador.editarRuta(ruta);
+            resp.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception e) {
             this.sendError(resp, ExcepcionApi.builder()
                     .code(HttpServletResponse.SC_BAD_REQUEST)
@@ -76,16 +71,12 @@ public class PuntoControlServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String idParametro = req.getParameter("idPuntoControl");
+        String idParametro = req.getParameter("idRuta");
         if (idParametro != null && !idParametro.isEmpty()) {
-            int idPuntoControl = Integer.parseInt(idParametro);
-            PuntoDeControl puntoControl = puntoControlDao.obtenerPuntoControl(idPuntoControl);
-            if (puntoControl != null) {
-                try {
-                    servicioAdministrador.eliminarPuntoControl(puntoControl.getIdPuntoControl());
-                } catch (ExcepcionApi e) {
-                    throw new RuntimeException(e);
-                }
+            int idRuta = Integer.parseInt(idParametro);
+            Ruta idRutaEntidad = rutaDao.obtenerRuta(idRuta);
+            if (idRutaEntidad != null) {
+                servicioAdministrador.eliminarRuta(idRutaEntidad.getIdPuntoControl());
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
