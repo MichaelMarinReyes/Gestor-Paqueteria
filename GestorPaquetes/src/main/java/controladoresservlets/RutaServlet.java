@@ -19,7 +19,7 @@ import java.io.PrintWriter;
 public class RutaServlet extends HttpServlet {
     private RutaDao rutaDao = new RutaDao();
     private ServicioAdministrador servicioAdministrador = new ServicioAdministrador();
-    private final Gson gson = new Gson();
+    private Gson gson = new Gson();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {

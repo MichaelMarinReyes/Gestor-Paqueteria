@@ -16,6 +16,7 @@ public class PuntoDeControl {
     private int paquetesEnCola;
     private double tarifaOperacion;
     private String estado;
+    private int maximaEnCola;
 
 
 }

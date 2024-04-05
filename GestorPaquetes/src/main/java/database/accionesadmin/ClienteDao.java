@@ -1,24 +1,65 @@
 package database.accionesadmin;
 
+import clases.puntosdecontrorutaydestino.PuntoDeControl;
 import clases.roles.Cliente;
 import database.ConexionDB;
+import jakarta.servlet.http.HttpServletResponse;
+import util.ExcepcionApi;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 public class ClienteDao {
+
+    public Cliente crearCliente(Cliente cliente) throws ExcepcionApi {
+        if (cliente == null) {
+            throw ExcepcionApi.builder().code(HttpServletResponse.SC_BAD_REQUEST).mensaje("El cliente proporcionado es nulo").build();
+        }
+
+        try (Connection connection = ConexionDB.getInstancia().conectar();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "insert into usuario (nit, nombre, apellido, contraseña, rol, estado_cuenta) values (?, ?, ?, ?, ?, ?);",
+                     Statement.RETURN_GENERATED_KEYS)) {
+
+            preparedStatement.setString(1, cliente.getNit());
+            preparedStatement.setString(2, cliente.getNombre());
+            preparedStatement.setString(3, cliente.getApellido());
+            preparedStatement.setString(4, cliente.getContraseña());
+            preparedStatement.setString(5, cliente.getRol());
+            preparedStatement.setString(6, cliente.getEstadoCuenta());
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new SQLException("No se pudo crear el cliente");
+            }
+
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    cliente.setNit(generatedKeys.getString(1));
+                    return cliente;
+                } else {
+                    throw new SQLException("No se pudo obtener el ID generado para el cliente");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al crear el cliente: " + e.getMessage(), e);
+        }
+    }
+
     public List<Cliente> obtenerClientes() {
         List<Cliente> clientes = new ArrayList<>();
         try {
             Statement statement = ConexionDB.getInstancia().conectar().createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM cliente;");
-            while (rs.next()) {
+            ResultSet resultSet = statement.executeQuery("select * from usuario;");
+            while (resultSet.next()) {
                 Cliente cliente = new Cliente();
-                cliente.getNit();
-                cliente.getNombre();
-                cliente.getApellido();
-                cliente.getContraseña();
-                cliente.isSesionActiva();
+                cliente.setNit(resultSet.getString("nit"));
+                cliente.setNombre(resultSet.getString("nombre"));
+                cliente.setApellido(resultSet.getString("apellido"));
+                cliente.setContraseña(resultSet.getString("contraseña"));
+                cliente.setRol(resultSet.getString("rol"));
+                cliente.setEstadoCuenta(resultSet.getString("estado_cuenta"));
                 clientes.add(cliente);
             }
             return clientes;
@@ -27,18 +68,19 @@ public class ClienteDao {
         }
     }
 
-    public Cliente obtenerClientePorId(int id) {
+    public Cliente obtenerCliente(String nit) {
         try {
-            PreparedStatement stmt = ConexionDB.getInstancia().conectar().prepareStatement("SELECT * FROM cliente WHERE id_cliente = ?;");
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
+            PreparedStatement stmt = ConexionDB.getInstancia().conectar().prepareStatement("select * from usuario where nit = ?;");
+            stmt.setString(1, nit);
+            ResultSet resultSet = stmt.executeQuery();
+            if (resultSet.next()) {
                 Cliente cliente = new Cliente();
-                cliente.getNit();
-                cliente.getNombre();
-                cliente.getApellido();
-                cliente.getContraseña();
-                cliente.isSesionActiva();
+                cliente.setNit(resultSet.getString("nit"));
+                cliente.setNombre(resultSet.getString("nombre"));
+                cliente.setApellido(resultSet.getString("apellido"));
+                cliente.setContraseña(resultSet.getString("contraseña"));
+                cliente.setRol(resultSet.getString("rol"));
+                cliente.setEstadoCuenta(resultSet.getString("estado_cuenta"));
                 return cliente;
             }
             return null;
@@ -47,40 +89,27 @@ public class ClienteDao {
         }
     }
 
-    public Cliente insertarCliente(Cliente cliente) {
-        try {
-            PreparedStatement stmt = ConexionDB.getInstancia().conectar().prepareStatement(
-                    "INSERT INTO cliente (nombre, apellido, contraseña, rol, sesion_activa, nit) VALUES (?, ?, ?, ?, ?, ?);",
-                    Statement.RETURN_GENERATED_KEYS
-            );
-            stmt.setString(1, cliente.getNombre());
-            stmt.setString(2, cliente.getApellido());
-            stmt.setString(3, cliente.getContraseña());
-            stmt.setString(4, cliente.getRol());
-            stmt.setBoolean(5, cliente.isSesionActiva());
-            stmt.setString(6, cliente.getNit());
-            stmt.execute();
-            ResultSet generatedKeys = stmt.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                // No se suele asignar un ID autogenerado a un cliente
-                // cliente.setIdCliente(generatedKeys.getInt(1));
-                return cliente;
-            }
-            return null;
+    public void actualizarCliente(Cliente cliente) {
+        String query = "update usuario set nit = ?, nombre = ?, apellido = ?, contraseña = ?, rol = ?, estado_cuenta = ? where nit = ?";
+        try (Connection connection = ConexionDB.getInstancia().conectar();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, cliente.getNit());
+            preparedStatement.setString(2, cliente.getNombre());
+            preparedStatement.setString(3, cliente.getApellido());
+            preparedStatement.setString(4, cliente.getContraseña());
+            preparedStatement.setString(5, cliente.getRol());
+            preparedStatement.setString(6, cliente.getEstadoCuenta());
+            preparedStatement.setString(7, cliente.getNit());
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
-    public Cliente actualizarCliente(Cliente cliente) {
-        // Método no implementado
-        return null;
-    }
-
-    public void eliminarCliente(int id) {
+    public void eliminarCliente(String nit) {
         try {
-            PreparedStatement stmt = ConexionDB.getInstancia().conectar().prepareStatement("DELETE FROM cliente WHERE id_cliente = ?;");
-            stmt.setInt(1, id);
+            PreparedStatement stmt = ConexionDB.getInstancia().conectar().prepareStatement("delete from usuario where nit = ?;");
+            stmt.setString(1, nit);
             stmt.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);

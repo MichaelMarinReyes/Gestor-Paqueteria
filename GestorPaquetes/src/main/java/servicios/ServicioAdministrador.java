@@ -1,16 +1,18 @@
 package servicios;
 
 import clases.puntosdecontrorutaydestino.*;
-import database.accionesadmin.PuntoDeControlDao;
-import database.accionesadmin.RutaDao;
+import clases.roles.Cliente;
+import database.accionesadmin.*;
 import jakarta.servlet.http.HttpServletResponse;
 import util.ExcepcionApi;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class ServicioAdministrador {
     private PuntoDeControlDao puntoDeControlDao = new PuntoDeControlDao();
     private RutaDao rutaDao = new RutaDao();
+    private ClienteDao clienteDao = new ClienteDao();
 
     //CRUD PARA PUNTOS DE CONTROL
     public List<PuntoDeControl> obtenerPuntosDeControl() {
@@ -48,7 +50,6 @@ public class ServicioAdministrador {
         }
     }
 
-
     public PuntoDeControl obtenerPuntoControl(int id) throws ExcepcionApi {
         PuntoDeControl puntoDeControl = puntoDeControlDao.obtenerPuntoControl(id);
         if (puntoDeControl == null) {
@@ -58,7 +59,7 @@ public class ServicioAdministrador {
     }
 
     //CRUD PARA RUTAS
-    public Ruta crearRuta(Ruta rutaEntidad) throws ExcepcionApi{
+    public Ruta crearRuta(Ruta rutaEntidad) throws ExcepcionApi {
         if (rutaEntidad == null) {
             throw ExcepcionApi.builder().code(HttpServletResponse.SC_NOT_FOUND).mensaje("No se creó la ruta\n Datos faltantes").build();
         }
@@ -80,6 +81,51 @@ public class ServicioAdministrador {
 
     public void eliminarRuta(int idRuta) {
         Ruta ruta = rutaDao.obtenerRuta(idRuta);
-         rutaDao.eliminarRuta(idRuta);
+        rutaDao.eliminarRuta(idRuta);
     }
+
+    //CRUD USUARIOS (CLIENTES)
+    public Cliente crearCliente(Cliente clienteEntidad) throws ExcepcionApi {
+        if (clienteEntidad == null) {
+            throw ExcepcionApi.builder().code(HttpServletResponse.SC_BAD_REQUEST).mensaje("No se proporcionó cliente").build();
+        }
+
+        String nit = clienteEntidad.getNit();
+        if (clienteDao.obtenerCliente(nit) != null) {
+            throw ExcepcionApi.builder().code(HttpServletResponse.SC_CONFLICT).mensaje("El NIT ya está registrado").build();
+        }
+
+        return clienteDao.crearCliente(clienteEntidad);
+    }
+
+    public List<Cliente> obtenerClientes() {
+        return clienteDao.obtenerClientes();
+    }
+
+    public void editarCliente(Cliente clienteEntidad) throws ExcepcionApi {
+        try {
+            Cliente cliente = clienteDao.obtenerCliente(clienteEntidad.getNit());
+            if (cliente != null) {
+                cliente.setNombre(clienteEntidad.getNombre());
+                cliente.setApellido(clienteEntidad.getApellido());
+                cliente.setContraseña(clienteEntidad.getContraseña());
+                cliente.setRol(clienteEntidad.getRol());
+                cliente.setEstadoCuenta(clienteEntidad.getEstadoCuenta());
+
+                clienteDao.actualizarCliente(cliente);
+            } else {
+                throw new ExcepcionApi(HttpServletResponse.SC_NOT_FOUND, "Cliente no encontrado en la base de datos");
+            }
+        } catch (RuntimeException e) {
+            throw new ExcepcionApi(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al editar el cliente: " + e.getMessage());
+        }
+    }
+
+
+
+    public void eliminarCliente(String nit) {
+        Cliente ruta = clienteDao.obtenerCliente(nit);
+        clienteDao.eliminarCliente(ruta.getNit());
+    }
+
 }

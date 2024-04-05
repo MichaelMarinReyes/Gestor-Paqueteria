@@ -30,6 +30,7 @@ public class PuntoDeControlDao {
                 puntoDeControl.setIdPaquete(resultSet.getInt("id_paquete"));
                 puntoDeControl.setPaquetesEnCola(resultSet.getInt("paquetes_en_cola"));
                 puntoDeControl.setTarifaOperacion(resultSet.getDouble("tarifa_operacion"));
+                puntoDeControl.setMaximaEnCola(resultSet.getInt("maxima_en_cola"));
                 puntosDeControl.add(puntoDeControl);
             }
             return puntosDeControl;
@@ -62,6 +63,7 @@ public class PuntoDeControlDao {
                     puntoControl.setIdPaquete(resultSet.getInt("id_paquete"));
                     puntoControl.setPaquetesEnCola(resultSet.getInt("paquetes_en_cola"));
                     puntoControl.setTarifaOperacion(resultSet.getDouble("tarifa_operacion"));
+                    puntoControl.setMaximaEnCola(resultSet.getInt("maxima_en_cola"));
                 }
             }
         } catch (SQLException e) {
@@ -72,7 +74,7 @@ public class PuntoDeControlDao {
 
 
     public PuntoDeControl crearPuntoControl(PuntoDeControl puntoControl) {
-        String query = "insert into punto_de_control (nombre, id_operador, id_paquete, paquetes_en_cola, tarifa_operacion, estado) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "insert into punto_de_control (nombre, id_operador, id_paquete, paquetes_en_cola, tarifa_operacion, estado, maxima_en_cola) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, puntoControl.getNombre());
@@ -81,6 +83,7 @@ public class PuntoDeControlDao {
             preparedStatement.setInt(4, puntoControl.getPaquetesEnCola());
             preparedStatement.setDouble(5, puntoControl.getTarifaOperacion());
             preparedStatement.setString(6, puntoControl.getEstado());
+            preparedStatement.setInt(7, puntoControl.getMaximaEnCola());
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             if (resultSet.next()) {
@@ -95,7 +98,7 @@ public class PuntoDeControlDao {
 
 
     public void actualizarPuntoControl(PuntoDeControl puntoControl) {
-        String query = "UPDATE punto_de_control SET nombre = ?, id_operador = ?, id_paquete = ?, paquetes_en_cola = ?, tarifa_operacion = ? WHERE id_punto_control = ?";
+        String query = "UPDATE punto_de_control SET nombre = ?, id_operador = ?, id_paquete = ?, paquetes_en_cola = ?, tarifa_operacion = ?, maxima_en_cola WHERE id_punto_control = ?";
         try (Connection connection = ConexionDB.getInstancia().conectar();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, puntoControl.getNombre());
@@ -104,6 +107,7 @@ public class PuntoDeControlDao {
             preparedStatement.setInt(4, puntoControl.getPaquetesEnCola());
             preparedStatement.setDouble(5, puntoControl.getTarifaOperacion());
             preparedStatement.setInt(6, puntoControl.getIdPuntoControl());
+            preparedStatement.setInt(7, puntoControl.getMaximaEnCola());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

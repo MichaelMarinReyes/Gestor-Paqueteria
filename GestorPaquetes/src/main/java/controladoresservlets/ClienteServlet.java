@@ -1,8 +1,9 @@
 package controladoresservlets;
 
 import clases.puntosdecontrorutaydestino.PuntoDeControl;
+import clases.roles.Cliente;
 import com.google.gson.Gson;
-import database.accionesadmin.PuntoDeControlDao;
+import database.accionesadmin.ClienteDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,27 +16,26 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "gestionar-puntos-de-control", urlPatterns = "/gestionar-puntos-de-control/*")
-public class PuntoControlServlet extends HttpServlet {
-    private PuntoDeControlDao puntoControlDao = new PuntoDeControlDao();
+@WebServlet(name="gestionar-clientes", urlPatterns = "/gestionar-clientes/*")
+public class ClienteServlet extends HttpServlet {
     private ServicioAdministrador servicioAdministrador = new ServicioAdministrador();
+    private ClienteDao clienteDao = new ClienteDao();
     private Gson gson = new Gson();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String idParametro = req.getParameter("idPuntoControl");
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String idParametro = req.getParameter("nit");
         if (idParametro != null && !idParametro.isEmpty()) {
-            int idPuntoControl = Integer.parseInt(idParametro);
-            PuntoDeControl puntoControl = puntoControlDao.obtenerPuntoControl(idPuntoControl);
-            if (puntoControl != null) {
+            Cliente nitCliente = clienteDao.obtenerCliente(idParametro);
+            if (nitCliente != null) {
                 resp.setContentType("application/json");
                 resp.setCharacterEncoding("UTF-8");
-                resp.getWriter().write(gson.toJson(puntoControl));
+                resp.getWriter().write(gson.toJson(nitCliente));
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
         } else {
-            this.sendResponse(resp, servicioAdministrador.obtenerPuntosDeControl());
+            this.sendResponse(resp, servicioAdministrador.obtenerClientes());
         }
     }
 
@@ -43,8 +43,8 @@ public class PuntoControlServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             Gson gson = new Gson();
-            PuntoDeControl puntoDeControl = gson.fromJson(req.getReader(), PuntoDeControl.class);
-            this.sendResponse(resp, puntoControlDao.crearPuntoControl(puntoDeControl));
+            Cliente cliente = gson.fromJson(req.getReader(), Cliente.class);
+            this.sendResponse(resp, servicioAdministrador.crearCliente(cliente));
         } catch (Exception e) {
             this.sendError(resp, ExcepcionApi.builder()
                     .code(HttpServletResponse.SC_INTERNAL_SERVER_ERROR)
@@ -58,10 +58,10 @@ public class PuntoControlServlet extends HttpServlet {
         try {
             Gson gson = new Gson();
             BufferedReader reader = req.getReader();
-            PuntoDeControl puntoDeControl = gson.fromJson(reader, PuntoDeControl.class);
+            Cliente cliente = gson.fromJson(reader, Cliente.class);
 
             try {
-                servicioAdministrador.editarPuntoControl(puntoDeControl);
+                servicioAdministrador.editarCliente(cliente);
                 resp.setStatus(HttpServletResponse.SC_OK);
             } catch (ExcepcionApi e) {
                 throw new RuntimeException(e);
@@ -76,21 +76,17 @@ public class PuntoControlServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String idParametro = req.getParameter("idPuntoControl");
+        String idParametro = req.getParameter("nit");
         if (idParametro != null && !idParametro.isEmpty()) {
-            int idPuntoControl = Integer.parseInt(idParametro);
-            PuntoDeControl puntoControl = puntoControlDao.obtenerPuntoControl(idPuntoControl);
-            if (puntoControl != null) {
-                try {
-                    servicioAdministrador.eliminarPuntoControl(puntoControl.getIdPuntoControl());
-                } catch (ExcepcionApi e) {
-                    throw new RuntimeException(e);
-                }
+            Cliente cliente = clienteDao.obtenerCliente(idParametro);
+            if (cliente != null) {
+                servicioAdministrador.eliminarCliente(cliente.getNit());
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
         }
     }
+
 
     private void sendResponse(HttpServletResponse resp, Object object) throws IOException {
         resp.setContentType("application/json");
