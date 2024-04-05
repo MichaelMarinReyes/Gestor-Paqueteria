@@ -8,8 +8,6 @@ package backend {
             - cliente: Cliente
             + mostrarReportes(): void
         }
-
-
     }
 
 
@@ -147,7 +145,151 @@ package backend {
     }
 
     package dababases {
+        class ConexionDB {
+            - ConexionDB instancia
+            - String URL_MYSQL
+            - String USER
+            - String PASSWORD
+            + getIntancia(): ConexionDB
+            + conectar(): Connection
 
+        }
+
+        class LoginDao {
+            + verificarCredenciales(String usuario, String contraseña): boolean
+        }
+
+        package accionesadmin {
+            class AdminDao{
+
+            }
+
+            class ClienteDao {
+                + crearCliente(Cliente cliente): Cliente
+                + obtenerClientes(): List
+                + obtenerCliente(String nit): Cliente
+                + actualizarCliente(Cliente cliente): void
+                + eliminarCliente(String nit): void
+            }
+
+            class OperadorDao {
+                + obtenerOperadores(): List
+                + obtenerOperador(int id): Operador
+                + crearOperador(Operador operador): void
+                + actualizarOperador(Operador operador): Operador
+                + eliminarOperador(int id): void
+            }
+
+            class PuntoDeControlDao {
+                + obtenerPuntosDeControl(): List
+                + obtenerPuntoDeControl(int id): PuntoDecontrol
+                + crearPuntoControl(PuntoDeControl puntoDeControl): PuntoDeControl
+                + actualizarPuntoContro(PuntoDeControl puntoDeControl): void
+                + eliminarPuntoControl(int id): void
+            }
+
+            class RecepcionistaDao {
+                + obtenerRecepcionistas(): List
+                + obtenerRecepcionista(int id): Recepcionista
+                + crearRecepcionista(Recepcionista recepcionista): Recepcionista
+                + actualizarRecepcionista(Recepcionista recepcionista): void
+                + eliminarRecepcionista(int id): void
+            }
+            class RutaDao {
+                + obtenerRutas(): List
+                + obtenerRuta(int id): Ruta
+                + crearRuta(Ruta ruta): Ruta
+                + actualizarRuta(Ruta rutaEntidad): void
+                + eliminarRuta(int id): void
+            }
+        }
+
+        package accionesoperador {
+
+        }
     }
+
+    package servlets {
+        class AdministradorServlet {
+            + doGet(HttpsServletRequest req, HttpServletResponse resp): void
+            + doPost(HttpsServletRequest req, HttpServletResponse resp): void
+            + doPut(HttpsServletRequest req, HttpServletResponse resp): void
+            + doDelete(HttpsServletRequest req, HttpServletResponse resp): void
+        }
+
+        class ClienteServlet {
+            + doGet(HttpsServletRequest req, HttpServletResponse resp): void
+            + doPost(HttpsServletRequest req, HttpServletResponse resp): void
+            + doPut(HttpsServletRequest req, HttpServletResponse resp): void
+            + doDelete(HttpsServletRequest req, HttpServletResponse resp): void
+        }
+        class LoginServlet {
+            + doGet(HttpsServletRequest req, HttpServletResponse resp): void
+            + doPost(HttpsServletRequest req, HttpServletResponse resp): void
+            + doPut(HttpsServletRequest req, HttpServletResponse resp): void
+            + doDelete(HttpsServletRequest req, HttpServletResponse resp): void
+        }
+        class PuntoControlServlet {
+            + doGet(HttpsServletRequest req, HttpServletResponse resp): void
+            + doPost(HttpsServletRequest req, HttpServletResponse resp): void
+            + doPut(HttpsServletRequest req, HttpServletResponse resp): void
+            + doDelete(HttpsServletRequest req, HttpServletResponse resp): void
+        }
+        class RutaServlet {
+            + doGet(HttpsServletRequest req, HttpServletResponse resp): void
+            + doPost(HttpsServletRequest req, HttpServletResponse resp): void
+            + doPut(HttpsServletRequest req, HttpServletResponse resp): void
+            + doDelete(HttpsServletRequest req, HttpServletResponse resp): void
+        }
+
+        class LoginServlet {
+            + doGet(HttpsServletRequest req, HttpServletResponse resp): void
+            + doPost(HttpsServletRequest req, HttpServletResponse resp): void
+            + doPut(HttpsServletRequest req, HttpServletResponse resp): void
+            + doDelete(HttpsServletRequest req, HttpServletResponse resp): void
+        }
+    }
+
+    package servicios {
+        class ServicioAdministrador {
+            - puntoDeControlDao PuntoDeControl
+            - rutaDao RuaDao
+            - clienteDao ClienteDao
+            + obtenerPuntosDeControl(): List
+            + crearPuntoControl(): PuntoDeControl
+            + eliminarPuntoControl(int idPuntoControl): void
+            + editarPuntoControl(PuntoDeControl puntoDeControl): void
+            + crearRuta(Ruta rutaEntidad): Ruta
+            + obtenerRutas(): List
+            + editarRuta(Ruta rutaEntidad): void
+            + eliminarRuta(int idRuta): void
+            + crearCliente(Cliente cliente): Cliente
+            + obtenerCliente(): List
+            + editarCliente(Cliente clienteEntidad, String nit): void
+            + eliminarCliente(String nit): void
+        }
+
+        class ServicioOperador {
+
+        }
+    }
+    
+    ClienteServlet *-- ServicioAdministrador
+    PuntoControlServlet *-- ServicioAdministrador
+    RutaServlet *-- ServicioAdministrador
+    AdministradorServlet *-- ServicioAdministrador
+    ServicioAdministrador *-- LoginDao
+    ServicioAdministrador *-- ClienteDao
+    ServicioAdministrador *-- PuntoDeControlDao
+    ServicioAdministrador *-- RutaDao
+
+    LoginDao *-- ConexionDB
+    ClienteDao *-- ConexionDB
+    PuntoDeControlDao *-- ConexionDB
+    RutaDao *-- ConexionDB
+    ClienteDao *-- Cliente
+    PuntoDeControlDao *-- PuntoControl
+    RutaDao *-- Ruta
+
 }
 

@@ -24,7 +24,7 @@ public class ClienteServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String idParametro = req.getParameter("nit");
+       String idParametro = req.getParameter("nit");
         if (idParametro != null && !idParametro.isEmpty()) {
             Cliente nitCliente = clienteDao.obtenerCliente(idParametro);
             if (nitCliente != null) {
@@ -56,17 +56,22 @@ public class ClienteServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
+            String nit = req.getParameter("nit");
+
             Gson gson = new Gson();
             BufferedReader reader = req.getReader();
             Cliente cliente = gson.fromJson(reader, Cliente.class);
 
             try {
-                servicioAdministrador.editarCliente(cliente);
+
+                servicioAdministrador.editarCliente(cliente,nit);
                 resp.setStatus(HttpServletResponse.SC_OK);
             } catch (ExcepcionApi e) {
                 throw new RuntimeException(e);
             }
         } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("error");
             this.sendError(resp, ExcepcionApi.builder()
                     .code(HttpServletResponse.SC_BAD_REQUEST)
                     .mensaje("Error al procesar el JSON: " + e.getMessage())
@@ -90,9 +95,9 @@ public class ClienteServlet extends HttpServlet {
 
     private void sendResponse(HttpServletResponse resp, Object object) throws IOException {
         resp.setContentType("application/json");
-        resp.setStatus(HttpServletResponse.SC_OK);
         PrintWriter out = resp.getWriter();
         out.println(new Gson().toJson(object));
+        resp.setStatus(HttpServletResponse.SC_OK);
     }
 
     private void sendError(HttpServletResponse resp, ExcepcionApi e) throws IOException {

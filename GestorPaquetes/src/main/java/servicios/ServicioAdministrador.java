@@ -102,17 +102,21 @@ public class ServicioAdministrador {
         return clienteDao.obtenerClientes();
     }
 
-    public void editarCliente(Cliente clienteEntidad) throws ExcepcionApi {
+    public void editarCliente(Cliente clienteEntidad, String nit) throws ExcepcionApi {
         try {
-            Cliente cliente = clienteDao.obtenerCliente(clienteEntidad.getNit());
+            System.out.println("Servlet "+ clienteEntidad.toString());
+            Cliente cliente = clienteDao.obtenerCliente(nit);
+            System.out.println("Servlet2 "+ cliente.toString());
             if (cliente != null) {
+                cliente.setNit(clienteEntidad.getNit());
                 cliente.setNombre(clienteEntidad.getNombre());
                 cliente.setApellido(clienteEntidad.getApellido());
                 cliente.setContraseña(clienteEntidad.getContraseña());
                 cliente.setRol(clienteEntidad.getRol());
                 cliente.setEstadoCuenta(clienteEntidad.getEstadoCuenta());
-
-                clienteDao.actualizarCliente(cliente);
+                System.out.println("Si se guardo 1" + cliente.toString());
+                clienteDao.actualizarCliente(cliente, nit);
+                System.out.println("Si se guardo" + cliente.toString());
             } else {
                 throw new ExcepcionApi(HttpServletResponse.SC_NOT_FOUND, "Cliente no encontrado en la base de datos");
             }
@@ -120,8 +124,6 @@ public class ServicioAdministrador {
             throw new ExcepcionApi(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al editar el cliente: " + e.getMessage());
         }
     }
-
-
 
     public void eliminarCliente(String nit) {
         Cliente ruta = clienteDao.obtenerCliente(nit);
