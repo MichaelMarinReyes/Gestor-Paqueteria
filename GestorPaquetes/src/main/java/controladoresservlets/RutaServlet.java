@@ -15,7 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "ruta", urlPatterns = "/ruta/*")
+@WebServlet(name = "gestionar_rutas", urlPatterns = "/gestionar-rutas/*")
 public class RutaServlet extends HttpServlet {
     private RutaDao rutaDao = new RutaDao();
     private ServicioAdministrador servicioAdministrador = new ServicioAdministrador();
@@ -44,7 +44,7 @@ public class RutaServlet extends HttpServlet {
         try {
             Gson gson = new Gson();
             Ruta ruta = gson.fromJson(req.getReader(), Ruta.class);
-            this.sendResponse(resp, rutaDao.crearRuta(ruta));
+            this.sendResponse(resp, servicioAdministrador.crearRuta(ruta));
         } catch (Exception e) {
             this.sendError(resp, ExcepcionApi.builder()
                     .code(HttpServletResponse.SC_INTERNAL_SERVER_ERROR)
@@ -57,8 +57,10 @@ public class RutaServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             Gson gson = new Gson();
+            int idRuta = Integer.parseInt(req.getParameter("idRuta"));
             BufferedReader reader = req.getReader();
             Ruta ruta = gson.fromJson(reader, Ruta.class);
+            ruta.setIdRuta(idRuta);
             servicioAdministrador.editarRuta(ruta);
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception e) {
@@ -76,7 +78,7 @@ public class RutaServlet extends HttpServlet {
             int idRuta = Integer.parseInt(idParametro);
             Ruta idRutaEntidad = rutaDao.obtenerRuta(idRuta);
             if (idRutaEntidad != null) {
-                servicioAdministrador.eliminarRuta(idRutaEntidad.getIdPuntoControl());
+                servicioAdministrador.eliminarRuta(idRutaEntidad.getIdRuta());
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }

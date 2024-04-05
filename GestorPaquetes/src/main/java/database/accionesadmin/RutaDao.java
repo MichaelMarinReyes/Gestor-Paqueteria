@@ -20,7 +20,6 @@ public class RutaDao {
                 Ruta ruta = new Ruta();
                 ruta.setIdRuta(resultSet.getInt("id_ruta"));
                 ruta.setNombreRuta(resultSet.getString("nombre_ruta"));
-                ruta.setIdPuntoControl(resultSet.getInt("id_punto_de_control"));
                 ruta.setIdDestino(resultSet.getInt("id_destino"));
                 rutas.add(ruta);
             }
@@ -51,7 +50,6 @@ public class RutaDao {
                     }
                     ruta.setNombreOperador(nombre);
                     ruta.setNombreOperador(resultSetNombre.);*/
-                    ruta.setIdPuntoControl(resultSet.getInt("id_punto_de_control"));
                     ruta.setIdDestino(resultSet.getInt("id_destino"));
 
                 }
@@ -61,19 +59,17 @@ public class RutaDao {
         }
         return ruta;
     }
-
-
+    
     public Ruta crearRuta(Ruta rutaEntidad) {
-        String query = "insert into ruta (nombre_ruta, id_punto_de_control, id_destino) VALUES (?, ?, ?);";
+        String query = "insert into ruta (nombre_ruta, id_destino) VALUES (?, ?)";
         try {
             PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, rutaEntidad.getNombreRuta());
-            preparedStatement.setInt(2, rutaEntidad.getIdPuntoControl());
-            preparedStatement.setInt(3, rutaEntidad.getIdDestino());
+            preparedStatement.setInt(2, rutaEntidad.getIdDestino());
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             if (resultSet.next()) {
-                rutaEntidad.setIdPuntoControl(resultSet.getInt(1));
+                rutaEntidad.setIdRuta(resultSet.getInt(1));
                 return rutaEntidad;
             }
             return null;
@@ -82,14 +78,13 @@ public class RutaDao {
         }
     }
 
-
     public void actualizarRuta(Ruta rutaEntidad) {
-        String query = "update ruta set nombre = ?, id_punto_de_control = ?, id_destino = ? where id_ruta = ?;";
+        String query = "update ruta set nombre_ruta = ?, id_destino = ? where id_ruta = ?;";
         try (Connection connection = ConexionDB.getInstancia().conectar();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, rutaEntidad.getNombreRuta());
-            preparedStatement.setInt(2, rutaEntidad.getIdPuntoControl());
-            preparedStatement.setInt(3, rutaEntidad.getIdDestino());
+            preparedStatement.setInt(2, rutaEntidad.getIdDestino());
+            preparedStatement.setInt(3, rutaEntidad.getIdRuta());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -97,7 +92,7 @@ public class RutaDao {
     }
 
     public void eliminarRuta(int id) {
-        String query = "delete from ruta where id_punto_control = ?;";
+        String query = "delete from ruta where id_ruta = ?;";
         try (Connection connection = ConexionDB.getInstancia().conectar();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, id);

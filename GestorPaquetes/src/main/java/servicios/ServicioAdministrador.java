@@ -73,7 +73,6 @@ public class ServicioAdministrador {
         Ruta ruta = rutaDao.obtenerRuta(rutaEntidad.getIdRuta());
         if (ruta != null) {
             ruta.setNombreRuta(rutaEntidad.getNombreRuta());
-            ruta.setIdPuntoControl(rutaEntidad.getIdPuntoControl());
             ruta.setIdDestino(rutaEntidad.getIdDestino());
             rutaDao.actualizarRuta(ruta);
         }
@@ -81,6 +80,6 @@ public class ServicioAdministrador {
 
     public void eliminarRuta(int idRuta) {
         Ruta ruta = rutaDao.obtenerRuta(idRuta);
-        rutaDao.eliminarRuta(idRuta);
+         rutaDao.eliminarRuta(idRuta);
     }
 }

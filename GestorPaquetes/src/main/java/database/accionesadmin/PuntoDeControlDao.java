@@ -72,7 +72,7 @@ public class PuntoDeControlDao {
 
 
     public PuntoDeControl crearPuntoControl(PuntoDeControl puntoControl) {
-        String query = "insert into punto_de_control (nombre, id_operador, id_paquete, paquetes_en_cola, tarifa_operacion) VALUES (?, ?, ?, ?, ?)";
+        String query = "insert into punto_de_control (nombre, id_operador, id_paquete, paquetes_en_cola, tarifa_operacion, estado) VALUES (?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, puntoControl.getNombre());
@@ -80,6 +80,7 @@ public class PuntoDeControlDao {
             preparedStatement.setInt(3, puntoControl.getIdPaquete());
             preparedStatement.setInt(4, puntoControl.getPaquetesEnCola());
             preparedStatement.setDouble(5, puntoControl.getTarifaOperacion());
+            preparedStatement.setString(6, puntoControl.getEstado());
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             if (resultSet.next()) {
@@ -110,7 +111,7 @@ public class PuntoDeControlDao {
     }
 
     public void eliminarPuntoControl(int id) {
-        String query = "DELETE FROM punto_de_control WHERE id_punto_control = ?;";
+        String query = "delete from punto_de_control where id_punto_control = ?;";
         try (Connection connection = ConexionDB.getInstancia().conectar();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, id);

@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 public class Ruta {
     private int idRuta;
     private String nombreRuta;
-    private int idPuntoControl;
     private int idDestino;
 
 }
