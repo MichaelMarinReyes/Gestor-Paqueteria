@@ -5,8 +5,6 @@ import clases.roles.Cliente;
 import database.accionesadmin.*;
 import jakarta.servlet.http.HttpServletResponse;
 import util.ExcepcionApi;
-
-import java.sql.SQLException;
 import java.util.List;
 
 public class ServicioAdministrador {
@@ -104,9 +102,7 @@ public class ServicioAdministrador {
 
     public void editarCliente(Cliente clienteEntidad, String nit) throws ExcepcionApi {
         try {
-            System.out.println("Servlet "+ clienteEntidad.toString());
             Cliente cliente = clienteDao.obtenerCliente(nit);
-            System.out.println("Servlet2 "+ cliente.toString());
             if (cliente != null) {
                 cliente.setNit(clienteEntidad.getNit());
                 cliente.setNombre(clienteEntidad.getNombre());
@@ -114,9 +110,7 @@ public class ServicioAdministrador {
                 cliente.setContraseña(clienteEntidad.getContraseña());
                 cliente.setRol(clienteEntidad.getRol());
                 cliente.setEstadoCuenta(clienteEntidad.getEstadoCuenta());
-                System.out.println("Si se guardo 1" + cliente.toString());
                 clienteDao.actualizarCliente(cliente, nit);
-                System.out.println("Si se guardo" + cliente.toString());
             } else {
                 throw new ExcepcionApi(HttpServletResponse.SC_NOT_FOUND, "Cliente no encontrado en la base de datos");
             }
@@ -129,5 +123,8 @@ public class ServicioAdministrador {
         Cliente ruta = clienteDao.obtenerCliente(nit);
         clienteDao.eliminarCliente(ruta.getNit());
     }
+
+    //CRUD PARA OPERADORES
+    
 
 }

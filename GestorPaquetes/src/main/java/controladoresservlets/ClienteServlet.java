@@ -57,21 +57,16 @@ public class ClienteServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             String nit = req.getParameter("nit");
-
             Gson gson = new Gson();
             BufferedReader reader = req.getReader();
             Cliente cliente = gson.fromJson(reader, Cliente.class);
-
             try {
-
                 servicioAdministrador.editarCliente(cliente,nit);
                 resp.setStatus(HttpServletResponse.SC_OK);
             } catch (ExcepcionApi e) {
                 throw new RuntimeException(e);
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.out.println("error");
             this.sendError(resp, ExcepcionApi.builder()
                     .code(HttpServletResponse.SC_BAD_REQUEST)
                     .mensaje("Error al procesar el JSON: " + e.getMessage())

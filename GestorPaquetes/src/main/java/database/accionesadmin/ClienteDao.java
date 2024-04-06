@@ -81,7 +81,6 @@ public class ClienteDao {
                 cliente.setContraseña(resultSet.getString("contraseña"));
                 cliente.setRol(resultSet.getString("rol"));
                 cliente.setEstadoCuenta(resultSet.getString("estado_cuenta"));
-                System.out.println("contenido " + cliente);
                 return cliente;
             }
             return null;
@@ -91,7 +90,6 @@ public class ClienteDao {
     }
 
     public void actualizarCliente(Cliente cliente, String nitBuscado) {
-        System.out.println(cliente.toString());
         String query = "update usuario set nit = ?, nombre = ?, apellido = ?, contraseña = ?, rol = ?, estado_cuenta = ? where nit = ?";
         try (Connection connection = ConexionDB.getInstancia().conectar();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -117,5 +115,4 @@ public class ClienteDao {
             throw new RuntimeException(e);
         }
     }
-
 }
