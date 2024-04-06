@@ -13,7 +13,6 @@ import java.io.IOException;
 
 @WebServlet(name = "login", urlPatterns = "/login/*")
 public class LoginServlet extends HttpServlet {
-    //private CorsFilter
     private LoginDao loginDao = new LoginDao();
 
     //OBTENER UN RECURSO
