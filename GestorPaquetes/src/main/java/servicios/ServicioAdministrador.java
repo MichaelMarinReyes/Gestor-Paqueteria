@@ -5,6 +5,8 @@ import clases.roles.Cliente;
 import database.accionesadmin.*;
 import jakarta.servlet.http.HttpServletResponse;
 import util.ExcepcionApi;
+
+import java.sql.SQLException;
 import java.util.List;
 
 public class ServicioAdministrador {
@@ -115,9 +117,11 @@ public class ServicioAdministrador {
                 throw new ExcepcionApi(HttpServletResponse.SC_NOT_FOUND, "Cliente no encontrado en la base de datos");
             }
         } catch (RuntimeException e) {
+            // Si ocurre una RuntimeException (u otra excepción no esperada), relanza como ExcepcionApi
             throw new ExcepcionApi(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al editar el cliente: " + e.getMessage());
         }
     }
+
 
     public void eliminarCliente(String nit) {
         Cliente ruta = clienteDao.obtenerCliente(nit);

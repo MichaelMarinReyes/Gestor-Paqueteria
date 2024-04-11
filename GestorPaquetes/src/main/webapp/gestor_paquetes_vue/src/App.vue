@@ -1,16 +1,15 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
-  <IniciarSesion msg="Bienvenido a gestor de paquetes."/>
+  <HelloWorld msg="Welcome to Your Vue.js App"/>
 </template>
 
 <script>
-
-import IniciarSesion from "@/components/IniciarSesion.vue";
+import HelloWorld from './components/HelloWorld.vue'
 
 export default {
   name: 'App',
   components: {
-    IniciarSesion,
+    HelloWorld
   }
 }
 </script>

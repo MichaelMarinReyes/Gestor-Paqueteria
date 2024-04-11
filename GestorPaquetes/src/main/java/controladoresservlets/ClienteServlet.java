@@ -16,7 +16,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name="gestionar-clientes", urlPatterns = "/gestionar-clientes/*")
+@WebServlet(name = "gestionar-clientes", urlPatterns = "/gestionar-clientes/*")
 public class ClienteServlet extends HttpServlet {
     private ServicioAdministrador servicioAdministrador = new ServicioAdministrador();
     private ClienteDao clienteDao = new ClienteDao();
@@ -24,7 +24,7 @@ public class ClienteServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-       String idParametro = req.getParameter("nit");
+        String idParametro = req.getParameter("nit");
         if (idParametro != null && !idParametro.isEmpty()) {
             Cliente nitCliente = clienteDao.obtenerCliente(idParametro);
             if (nitCliente != null) {
@@ -61,12 +61,18 @@ public class ClienteServlet extends HttpServlet {
             BufferedReader reader = req.getReader();
             Cliente cliente = gson.fromJson(reader, Cliente.class);
             try {
-                servicioAdministrador.editarCliente(cliente,nit);
+                servicioAdministrador.editarCliente(cliente, nit);
                 resp.setStatus(HttpServletResponse.SC_OK);
             } catch (ExcepcionApi e) {
                 throw new RuntimeException(e);
+            } catch (Exception e) {
+                this.sendError(resp, ExcepcionApi.builder()
+                        .code(HttpServletResponse.SC_BAD_REQUEST)
+                        .mensaje("Error al procesar el JSON: " + e.getMessage())
+                        .build());
             }
         } catch (Exception e) {
+            System.out.println("Error");
             this.sendError(resp, ExcepcionApi.builder()
                     .code(HttpServletResponse.SC_BAD_REQUEST)
                     .mensaje("Error al procesar el JSON: " + e.getMessage())
@@ -86,7 +92,6 @@ public class ClienteServlet extends HttpServlet {
             }
         }
     }
-
 
     private void sendResponse(HttpServletResponse resp, Object object) throws IOException {
         resp.setContentType("application/json");
