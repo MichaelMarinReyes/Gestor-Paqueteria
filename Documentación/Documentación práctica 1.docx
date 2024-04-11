@@ -1,0 +1,225 @@
+MAPEO FÍSICO
+Tabla administrador
+create table administrador
+(
+    id_administrador int auto_increment primary key,
+    nombre varchar(50) not null,
+    apellido varchar(30) not null,
+    contraseña varchar(50) not null,
+    sesion_activa tinyint(1)  not null,
+    rol varchar(30) not null
+)
+
+Tabla bodega
+create table bodega
+(
+    id_transaccion int auto_increment primary key,
+    id_paquete int not null,
+    id_ruta int not null,
+    constraint bodega_ibfk_1 foreign key (id_paquete) references paquete (id_paquete)
+)
+
+Tabla destino
+create table destino
+(
+    id_destino int auto_increment primary key,
+    nombre varchar(20) not null,
+    cuota_destino double not null
+)
+
+Tabla operador
+create table operador
+(
+    id_operador int auto_increment primary key,
+    id_punto_control int null,
+    nombre varchar(50) not null,
+    apellido varchar(30) not null,
+    contraseña varchar(50) not null,
+    sesion_activa tinyint(1)  not null,
+    rol varchar(30) not null
+)
+
+Tabla paquete
+create table paquete
+(
+    id_paquete int auto_increment primary key,
+    nit varchar(50) not null,
+    estado_paquete varchar(50) not null,
+    id_destino int not null,
+    constraint FK_nit foreign key (nit) references usuario (nit)
+)
+
+Tabla punto_de_control
+create table punto_de_control
+(
+    id_punto_control int auto_increment primary key,
+    nombre varchar(50) not null,
+    id_operador int  null,
+    id_paquete int null,
+    paquetes_en_cola int null,
+    tarifa_operacion double not null,
+    estado varchar(30) not null
+)
+
+Tabla recepcionista
+create table recepcionista
+(
+    id_recepcionista int auto_increment primary key,
+    id_paquete int null,
+    nombre varchar(50) not null,
+    apellido varchar(50) not null,
+    contraseña varchar(50) not null,
+    sesion_activa tinyint(1)  not null,
+    rol varchar(30) not null
+)
+
+Tabla ruta
+create table ruta
+(
+    id_ruta int auto_increment primary key,
+    nombre_ruta varchar(50) not null,
+    id_destino int null,
+    constraint ruta_ibfk_2 foreign key (id_destino) references destino (id_destino)
+)
+
+Tabla ruta_punto_de_control
+create table ruta_punto_de_control
+(
+    id_ruta int null,
+    id_punto_de_control int null,
+    constraint ruta_punto_de_control_ibfk_1 foreign key (id_ruta) references ruta (id_ruta),
+    constraint ruta_punto_de_control_ibfk_2 foreign key (id_punto_de_control) references punto_de_control (id_punto_control)
+);
+
+Tabla usuario
+create table usuario
+(
+    nit varchar(50) not null primary key,
+    nombre varchar(50) not null,
+    apellido varchar(30) not null,
+    contraseña varchar(50) not null,
+    rol varchar(30) not null,
+    estado_cuenta varchar(10) not null
+)
+
+
+
+BACKUP
+5 Usuarios
+INSERT INTO usuario (nit, nombre, apellido, contraseña, rol, estado_cuenta)
+VALUES
+    ('123456-4', 'Elizabeth', 'Garcia', 'elizabeth123', 'CLIENTE', 'Activa'),
+    ('147258-7', 'Miguel', 'Hernández', 'miguel147', 'CLIENTE', 'Activa'),
+    ('258369-2', 'José', 'Calderón', 'jose258', 'CLIENTE', 'Activa'),
+    ('369147-3', 'Juan', 'López', 'juan369', 'CLIENTE', 'Activa'),
+    ('456789-5', 'Angela', 'Cruz', 'angela456', 'CLIENTE', 'Activa');
+
+
+3 Administradores
+INSERT INTO administrador (id_administrador, nombre, apellido, contraseña, sesion_activa, rol)
+VALUES
+    (1, 'Carlos', 'Pérez', 'admin1', 0, 'ADMINISTRADOR'),
+    (2, 'Francisco', 'Morales', 'admin2', 0, 'ADMINISTRADOR'),
+    (3, 'Fernando', 'Hernández', 'admin3', 0, 'ADMINISTRADOR');
+
+
+3 Operadores
+INSERT INTO operador (id_operador, id_punto_control, nombre, apellido, contraseña, sesion_activa, rol)
+VALUES
+    (1, NULL, 'Francisco', 'Juarez', 'juarez123', 0, 'OPERADOR'),
+    (2, NULL, 'Miguel', 'Garcia', 'garcia456', 0, 'OPERADOR'),
+    (3, NULL, 'Alex', 'Loarca', 'loarca789', 0, 'OPERADOR');
+
+
+3 Recepcionistas
+INSERT INTO recepcionista (id_recepcionista, id_paquete, nombre, apellido, contraseña, sesion_activa, rol)
+VALUES
+    (1, NULL, 'Juan Carlos', 'González', 'gonzalez012', 0, 'RECEPCIONISTA'),
+    (2, NULL, 'Lucía', 'Cifuentes', 'cifuentes147', 0, 'RECEPCIONISTA'),
+    (3, NULL, 'Fernanda', 'Rojas', 'rojas2580', 0, 'RECEPCIONISTA');
+
+
+5 rutas
+INSERT INTO ruta (id_ruta, nombre_ruta, id_destino)
+VALUES
+    (1, 'Ruta de la Cruz', 1),
+    (2, 'Ruta Fuentes', 2),
+    (3, 'Ruta del Sur', 3),
+    (4, 'Ruta del Norte', 4),
+    (5, 'Ruta Oriental', 5);
+
+
+8 puntos de control
+INSERT INTO punto_de_control (id_punto_control, nombre, id_operador, id_paquete, paquetes_en_cola, tarifa_operacion, estado, maxima_en_cola)
+VALUES
+    (1, 'Soluciones Nexus', NULL, NULL, NULL, 0, 'Activo', 5),
+    (2, 'Centro de Innovación', NULL, NULL, NULL, 0, 'Activo', 5),
+    (3, 'Empresas Cumbre', NULL, NULL, NULL, 0, 'Activo', 5),
+    (4, 'Plaza Máxima', NULL, NULL, NULL, 0, 'Activo', 5),
+    (5, 'Alturas del Horizonte', NULL, NULL, NULL, 0, 'Activo', 5),
+    (6, 'Centro Fusión', NULL, NULL, NULL, 0, 'Activo', 5),
+    (7, 'Torre Horizonte', NULL, NULL, NULL, 0, 'Activo', 5),
+    (8, 'Centro Catalizador', NULL, NULL, NULL, 0, 'Activo', 5);
+
+
+5 rutas con 4 puntos de control
+INSERT INTO ruta_punto_de_control (id_ruta, id_punto_de_control)
+VALUES
+    (1, 1),
+    (1, 2),
+    (1, 3),
+    (1, 4),
+    (2, 5),
+    (2, 6),
+    (2, 7),
+    (2, 8),
+    (3, 1),
+    (3, 2),
+    (3, 5),
+    (3, 6),
+    (4, 3),
+    (4, 4),
+    (4, 7),
+    (4, 8),
+    (5, 1),
+    (5, 2),
+    (5, 4),
+    (5, 5);
+
+
+
+
+3 paquetes por cliente en ruta
+
+insert into paquete (nit, estado_paquete, id_destino) values ('123456-4', 'En ruta', 1), ('123456-4', 'En ruta', 2), ('123456-4', 'En ruta', 3);
+
+insert into paquete (nit, estado_paquete, id_destino) values ('147258-7', 'En ruta', 2), ('147258-7', 'En ruta', 3), ('147258-7', 'En ruta', 4);
+
+insert into paquete (nit, estado_paquete, id_destino) values ('258369-2', 'En ruta', 3), ('258369-2', 'En ruta', 4), ('258369-2', 'En ruta', 5);
+
+insert into paquete (nit, estado_paquete, id_destino) values ('369147-3', 'En ruta', 4), ('369147-3', 'En ruta', 5), ('369147-3', 'En ruta', 1);
+
+insert into paquete (nit, estado_paquete, id_destino) values ('456789-5', 'En ruta', 5), ('456789-5', 'En ruta', 1), ('456789-5', 'En ruta', 2);
+
+5 paquetes entregados
+insert paquete (nit, estado_paquete, id_destino) values ('123456-4', 'Entregado', 1), ('123456-4', 'Entregado', 2), ('123456-4', 'Entregado', 3), ('123456-4', 'Entregado', 4), ('123456-4', 'Entregado', 5);
+
+insert paquete (nit, estado_paquete, id_destino) values ('147258-7', 'Entregado', 1), ('147258-7', 'Entregado', 2), ('147258-7', 'Entregado', 3), ('147258-7', 'Entregado', 4), ('147258-7', 'Entregado', 5);
+
+insert paquete (nit, estado_paquete, id_destino) values ('258369-2', 'Entregado', 1), ('258369-2', 'Entregado', 2), ('258369-2', 'Entregado', 3), ('258369-2', 'Entregado', 4), ('258369-2', 'Entregado', 5);
+
+insert paquete (nit, estado_paquete, id_destino) values ('369147-3', 'Entregado', 1), ('369147-3', 'Entregado', 2), ('369147-3', 'Entregado', 3), ('369147-3', 'Entregado', 4), ('369147-3', 'Entregado', 5);
+
+insert paquete (nit, estado_paquete, id_destino) values ('456789-5', 'Entregado', 1), ('456789-5', 'Entregado', 2), ('456789-5', 'Entregado', 3), ('456789-5', 'Entregado', 4), ('456789-5', 'Entregado', 5);
+
+
+
+LLENAR CAMPO DE CANTIDAD PAQUETE EN LA TABLA PUNTO DE CONTROL
+UPDATE punto_de_control AS p
+SET p.paquetes_en_cola = (
+    SELECT COUNT(*) 
+    FROM paquete AS pq
+    WHERE pq.id_punto_control = p.id_punto_control
+    AND pq.estado_paquete = 'En ruta'
+);
+
