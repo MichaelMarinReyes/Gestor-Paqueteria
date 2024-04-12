@@ -20,8 +20,13 @@ public class ServicioAdministrador {
     }
 
     public PuntoDeControl crearPuntoControl(PuntoDeControl puntoDeControlEntidad) throws ExcepcionApi {
+        int idPUuntoControl = puntoDeControlEntidad.getIdPuntoControl();
         if (puntoDeControlEntidad == null) {
-            throw ExcepcionApi.builder().code(HttpServletResponse.SC_NOT_FOUND).mensaje("Punto de control no existe").build();
+            throw ExcepcionApi.builder().code(HttpServletResponse.SC_BAD_REQUEST).mensaje("No se proporcionó punto de control").build();
+        }
+
+        if (puntoDeControlDao.obtenerPuntoControl(idPUuntoControl) != null) {
+            throw ExcepcionApi.builder().code(HttpServletResponse.SC_CONFLICT).mensaje("El punto de control ya está registrado").build();
         }
         return puntoDeControlDao.crearPuntoControl(puntoDeControlEntidad);
     }
@@ -39,11 +44,13 @@ public class ServicioAdministrador {
     public void editarPuntoControl(PuntoDeControl puntoDeControlEntidad) throws ExcepcionApi {
         PuntoDeControl puntoDeControl = puntoDeControlDao.obtenerPuntoControl(puntoDeControlEntidad.getIdPuntoControl());
         if (puntoDeControl != null) {
+            puntoDeControl.setIdPuntoControl(puntoDeControlEntidad.getIdPuntoControl());
             puntoDeControl.setNombre(puntoDeControlEntidad.getNombre());
             puntoDeControl.setIdOperador(puntoDeControlEntidad.getIdOperador());
-            puntoDeControl.setIdPaquete(puntoDeControlEntidad.getIdPaquete());
             puntoDeControl.setPaquetesEnCola(puntoDeControlEntidad.getPaquetesEnCola());
             puntoDeControl.setTarifaOperacion(puntoDeControlEntidad.getTarifaOperacion());
+            puntoDeControl.setMaximaEnCola(puntoDeControlEntidad.getMaximaEnCola());
+            puntoDeControl.setEstado(puntoDeControlEntidad.getEstado());
             puntoDeControlDao.actualizarPuntoControl(puntoDeControl);
         } else {
             throw ExcepcionApi.builder().code(HttpServletResponse.SC_NOT_FOUND).mensaje("Punto de control no existe").build();

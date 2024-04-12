@@ -44,7 +44,7 @@ public class PuntoControlServlet extends HttpServlet {
         try {
             Gson gson = new Gson();
             PuntoDeControl puntoDeControl = gson.fromJson(req.getReader(), PuntoDeControl.class);
-            this.sendResponse(resp, puntoControlDao.crearPuntoControl(puntoDeControl));
+            this.sendResponse(resp, servicioAdministrador.crearPuntoControl(puntoDeControl));
         } catch (Exception e) {
             this.sendError(resp, ExcepcionApi.builder()
                     .code(HttpServletResponse.SC_INTERNAL_SERVER_ERROR)

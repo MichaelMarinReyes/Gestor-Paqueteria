@@ -101,7 +101,6 @@ public class ClienteDao {
             preparedStatement.setString(6, cliente.getEstadoCuenta());
             preparedStatement.setString(7, nitBuscado);
             int rowsAffected = preparedStatement.executeUpdate();
-            System.out.println("entre en cliente dao");
             if (rowsAffected == 0) {
                 throw new SQLException("La actualización del cliente no afectó ninguna fila en la base de datos.");
             }

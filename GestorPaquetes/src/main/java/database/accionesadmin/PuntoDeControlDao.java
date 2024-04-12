@@ -6,6 +6,8 @@ import java.util.List;
 
 import database.ConexionDB;
 import clases.puntosdecontrorutaydestino.PuntoDeControl;
+import jakarta.servlet.http.HttpServletResponse;
+import util.ExcepcionApi;
 
 public class PuntoDeControlDao {
 
@@ -27,10 +29,11 @@ public class PuntoDeControlDao {
                     nombre = resultSet.getString("id_operador");
                 }
                 puntoDeControl.setNombreOperador(nombre);*/
-                puntoDeControl.setIdPaquete(resultSet.getInt("id_paquete"));
+                puntoDeControl.setIdOperador(resultSet.getInt("id_operador"));
                 puntoDeControl.setPaquetesEnCola(resultSet.getInt("paquetes_en_cola"));
                 puntoDeControl.setTarifaOperacion(resultSet.getDouble("tarifa_operacion"));
                 puntoDeControl.setMaximaEnCola(resultSet.getInt("maxima_en_cola"));
+                puntoDeControl.setEstado(resultSet.getString("estado"));
                 puntosDeControl.add(puntoDeControl);
             }
             return puntosDeControl;
@@ -60,10 +63,11 @@ public class PuntoDeControlDao {
                     }
                     puntoControl.setNombreOperador(nombre);
                     puntoControl.setNombreOperador(resultSetNombre.);*/
-                    puntoControl.setIdPaquete(resultSet.getInt("id_paquete"));
+                    puntoControl.setIdOperador(resultSet.getInt("id_operador"));
                     puntoControl.setPaquetesEnCola(resultSet.getInt("paquetes_en_cola"));
                     puntoControl.setTarifaOperacion(resultSet.getDouble("tarifa_operacion"));
                     puntoControl.setMaximaEnCola(resultSet.getInt("maxima_en_cola"));
+                    puntoControl.setEstado(resultSet.getString("estado"));
                 }
             }
         } catch (SQLException e) {
@@ -73,46 +77,57 @@ public class PuntoDeControlDao {
     }
 
 
-    public PuntoDeControl crearPuntoControl(PuntoDeControl puntoControl) {
-        String query = "insert into punto_de_control (nombre, id_operador, id_paquete, paquetes_en_cola, tarifa_operacion, estado, maxima_en_cola) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try {
-            PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+    public PuntoDeControl crearPuntoControl(PuntoDeControl puntoControl) throws ExcepcionApi {
+        String query = "insert into punto_de_control (nombre, id_operador, paquetes_en_cola, tarifa_operacion, maxima_en_cola, estado) values (?, ?, ?, ?, ?, ?)";
+        if (puntoControl == null) {
+            throw ExcepcionApi.builder().code(HttpServletResponse.SC_BAD_REQUEST).mensaje("El punto de control proporcionado es nulo").build();
+        }
+
+        try (Connection connection = ConexionDB.getInstancia().conectar();
+             PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+
             preparedStatement.setString(1, puntoControl.getNombre());
             preparedStatement.setInt(2, puntoControl.getIdOperador());
-            preparedStatement.setInt(3, puntoControl.getIdPaquete());
-            preparedStatement.setInt(4, puntoControl.getPaquetesEnCola());
-            preparedStatement.setDouble(5, puntoControl.getTarifaOperacion());
+            preparedStatement.setInt(3, puntoControl.getPaquetesEnCola());
+            preparedStatement.setDouble(4, puntoControl.getTarifaOperacion());
+            preparedStatement.setInt(5, puntoControl.getMaximaEnCola());
             preparedStatement.setString(6, puntoControl.getEstado());
-            preparedStatement.setInt(7, puntoControl.getMaximaEnCola());
-            preparedStatement.execute();
-            ResultSet resultSet = preparedStatement.getGeneratedKeys();
-            if (resultSet.next()) {
-                puntoControl.setIdPuntoControl(resultSet.getInt(1));
-                return puntoControl;
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new SQLException("No se pudo crear el punto de control");
             }
-            return null;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error al crear el punto de control: " + e.getMessage(), e);
         }
+        return puntoControl;
     }
 
 
     public void actualizarPuntoControl(PuntoDeControl puntoControl) {
-        String query = "UPDATE punto_de_control SET nombre = ?, id_operador = ?, id_paquete = ?, paquetes_en_cola = ?, tarifa_operacion = ?, maxima_en_cola WHERE id_punto_control = ?";
+        String query = "update punto_de_control set nombre = ?, id_operador = ?, paquetes_en_cola = ?, tarifa_operacion = ?, maxima_en_cola = ?, estado = ? where id_punto_control = ?";
+
         try (Connection connection = ConexionDB.getInstancia().conectar();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, puntoControl.getNombre());
             preparedStatement.setInt(2, puntoControl.getIdOperador());
-            preparedStatement.setInt(3, puntoControl.getIdPaquete());
-            preparedStatement.setInt(4, puntoControl.getPaquetesEnCola());
-            preparedStatement.setDouble(5, puntoControl.getTarifaOperacion());
-            preparedStatement.setInt(6, puntoControl.getIdPuntoControl());
-            preparedStatement.setInt(7, puntoControl.getMaximaEnCola());
-            preparedStatement.executeUpdate();
+            preparedStatement.setInt(3, puntoControl.getPaquetesEnCola());
+            preparedStatement.setDouble(4, puntoControl.getTarifaOperacion());
+            preparedStatement.setDouble(5, puntoControl.getMaximaEnCola());
+            preparedStatement.setString(6, puntoControl.getEstado());
+            preparedStatement.setInt(7, puntoControl.getIdPuntoControl());
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected == 0) {
+                throw new SQLException("La actualización del punto de control no afectó ninguna fila en la base de datos.");
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 
     public void eliminarPuntoControl(int id) {
         String query = "delete from punto_de_control where id_punto_control = ?;";
