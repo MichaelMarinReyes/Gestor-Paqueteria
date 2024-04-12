@@ -2,6 +2,7 @@ package servicios;
 
 import clases.puntosdecontrorutaydestino.*;
 import clases.roles.Cliente;
+import clases.roles.Operador;
 import database.accionesadmin.*;
 import jakarta.servlet.http.HttpServletResponse;
 import util.ExcepcionApi;
@@ -13,6 +14,7 @@ public class ServicioAdministrador {
     private PuntoDeControlDao puntoDeControlDao = new PuntoDeControlDao();
     private RutaDao rutaDao = new RutaDao();
     private ClienteDao clienteDao = new ClienteDao();
+    private OperadorDao operadorDao = new OperadorDao();
 
     //CRUD PARA PUNTOS DE CONTROL
     public List<PuntoDeControl> obtenerPuntosDeControl() {
@@ -128,7 +130,6 @@ public class ServicioAdministrador {
                 throw new ExcepcionApi(HttpServletResponse.SC_NOT_FOUND, "Cliente no encontrado en la base de datos");
             }
         } catch (RuntimeException e) {
-            // Si ocurre una RuntimeException (u otra excepción no esperada), relanza como ExcepcionApi
             throw new ExcepcionApi(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al editar el cliente: " + e.getMessage());
         }
     }
@@ -139,6 +140,50 @@ public class ServicioAdministrador {
     }
 
     //CRUD PARA OPERADORES
+    public List<Operador> obtenerOperadores() {
+        return operadorDao.obtenerOperadores();
+    }
 
+    public Operador crearOperador(Operador operadorEntidad) throws ExcepcionApi {
+        if (operadorEntidad == null) {
+            throw ExcepcionApi.builder().code(HttpServletResponse.SC_BAD_REQUEST).mensaje("No se proporcionó operador").build();
+        }
 
+        if (operadorDao.obtenerOperador(operadorEntidad.getIdOperador()) != null) {
+            throw ExcepcionApi.builder().code(HttpServletResponse.SC_CONFLICT).mensaje("El operador ya existe en la base de datos").build();
+        }
+        return operadorDao.crearOperador(operadorEntidad);
+    }
+
+    public void actualizarOperador(Operador operadorEntidad, int idOperador) {
+        try {
+            Operador operador = operadorDao.obtenerOperador(idOperador);
+            if (operador != null) {
+                operador.setIdOperador(operadorEntidad.getIdOperador());
+                operador.setNombre(operadorEntidad.getNombre());
+                operador.setApellido(operadorEntidad.getApellido());
+                operador.setContraseña(operadorEntidad.getContraseña());
+                operador.setIdPuntoControl(operadorEntidad.getIdPuntoControl());
+                operador.setSesionActiva(operador.isSesionActiva());
+                operador.setRol(operadorEntidad.getRol());
+                operadorDao.actualizarOperador(operador, idOperador);
+            } else {
+                throw new ExcepcionApi(HttpServletResponse.SC_NOT_FOUND, "Operador no encontrado en la base de datos");
+            }
+        } catch (RuntimeException | ExcepcionApi e) {
+            try {
+                throw new ExcepcionApi(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al editar el operador: " + e.getMessage());
+            } catch (ExcepcionApi ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
+    public void eliminarOperador(int idOperador) throws ExcepcionApi {
+        Operador operador = operadorDao.obtenerOperador(idOperador);
+        if (operador == null) {
+            throw  ExcepcionApi.builder().code(HttpServletResponse.SC_NOT_FOUND).mensaje("No se encontró el operador").build();
+        }
+        operadorDao.eliminarOperador(idOperador);
+    }
 }

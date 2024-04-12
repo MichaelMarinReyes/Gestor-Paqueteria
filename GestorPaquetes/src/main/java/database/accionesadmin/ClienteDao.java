@@ -1,11 +1,9 @@
 package database.accionesadmin;
 
-import clases.puntosdecontrorutaydestino.PuntoDeControl;
 import clases.roles.Cliente;
 import database.ConexionDB;
 import jakarta.servlet.http.HttpServletResponse;
 import util.ExcepcionApi;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
