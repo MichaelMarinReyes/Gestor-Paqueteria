@@ -9,8 +9,6 @@ import java.util.List;
 
 public class LocalizarPaqueteDao {
 
-    private Paquete paquete = new Paquete();
-
     public List<Paquete> obtenerPaquetes() {
         List<Paquete> puntosDeControl = new ArrayList<>();
         try {
@@ -20,6 +18,7 @@ public class LocalizarPaqueteDao {
                 Paquete paquete = new Paquete();
                 paquete.setIdPaquete(resultSet.getInt("id_paquete"));
                 paquete.setNit(resultSet.getString("nit"));
+                paquete.setEstadoPaquete(resultSet.getString("estado_paquete"));
                 paquete.setIdDestino(resultSet.getInt("id_destino"));
                 paquete.setIdPuntoControl(resultSet.getInt("id_punto_control"));/*
                 paquete.setHoraEntrada(resultSet.getDate("hora_entrada").toLocalDate().toString());
@@ -65,4 +64,6 @@ public class LocalizarPaqueteDao {
             throw new RuntimeException(e);
         }
     }
+
+
 }

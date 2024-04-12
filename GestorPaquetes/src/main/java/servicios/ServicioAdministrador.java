@@ -133,7 +133,6 @@ public class ServicioAdministrador {
         }
     }
 
-
     public void eliminarCliente(String nit) {
         Cliente ruta = clienteDao.obtenerCliente(nit);
         clienteDao.eliminarCliente(ruta.getNit());
