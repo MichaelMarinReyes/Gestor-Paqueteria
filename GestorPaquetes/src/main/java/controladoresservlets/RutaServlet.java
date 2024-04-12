@@ -78,7 +78,11 @@ public class RutaServlet extends HttpServlet {
             int idRuta = Integer.parseInt(idParametro);
             Ruta idRutaEntidad = rutaDao.obtenerRuta(idRuta);
             if (idRutaEntidad != null) {
-                servicioAdministrador.eliminarRuta(idRutaEntidad.getIdRuta());
+                try {
+                    servicioAdministrador.eliminarRuta(idRutaEntidad.getIdRuta());
+                } catch (ExcepcionApi e) {
+                    throw new RuntimeException(e);
+                }
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }

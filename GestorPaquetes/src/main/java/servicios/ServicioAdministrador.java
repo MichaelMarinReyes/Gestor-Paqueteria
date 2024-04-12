@@ -80,14 +80,18 @@ public class ServicioAdministrador {
     public void editarRuta(Ruta rutaEntidad) {
         Ruta ruta = rutaDao.obtenerRuta(rutaEntidad.getIdRuta());
         if (ruta != null) {
+            ruta.setIdRuta(rutaEntidad.getIdRuta());
             ruta.setNombreRuta(rutaEntidad.getNombreRuta());
             ruta.setIdDestino(rutaEntidad.getIdDestino());
             rutaDao.actualizarRuta(ruta);
         }
     }
 
-    public void eliminarRuta(int idRuta) {
+    public void eliminarRuta(int idRuta) throws ExcepcionApi {
         Ruta ruta = rutaDao.obtenerRuta(idRuta);
+        if (ruta == null) {
+            throw ExcepcionApi.builder().code(HttpServletResponse.SC_NOT_FOUND).mensaje("No se encontró la ruta").build();
+        }
         rutaDao.eliminarRuta(idRuta);
     }
 
