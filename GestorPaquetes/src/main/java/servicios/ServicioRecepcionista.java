@@ -6,6 +6,7 @@ import clases.roles.Cliente;
 import database.accionesadmin.ClienteDao;
 import database.accionesadmin.PuntoDeControlDao;
 import database.accionesrecepcionista.BodegaDao;
+import database.accionesrecepcionista.DestinoDao;
 import database.accionesrecepcionista.LocalizarPaqueteDao;
 import jakarta.servlet.http.HttpServletResponse;
 import util.ExcepcionApi;
@@ -14,6 +15,7 @@ import java.util.List;
 public class ServicioRecepcionista {
     private LocalizarPaqueteDao localizarPaqueteDao = new LocalizarPaqueteDao();
     private ClienteDao clienteDao = new ClienteDao();
+    private DestinoDao destinoDao = new DestinoDao();
 
     public List<Paquete> obtenerPaquetes() {
         return localizarPaqueteDao.obtenerPaquetes();
@@ -69,5 +71,10 @@ public class ServicioRecepcionista {
         if (paquete != null) {
             localizarPaqueteDao.eliminarPaquete(paquete.getIdPaquete());
         }
+    }
+
+    //LISTADO DE PAQUETES EN EL DESTINO
+    public List<Paquete> obtenerPaquetesEntregados() {
+        return destinoDao.obtenerPaquetesEntregados();
     }
 }
