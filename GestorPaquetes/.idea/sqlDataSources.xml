@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="ebd46b3e-bbe1-418c-9d51-208fb3608fee" name="gestor_paquetes@localhost Mapping">
+      <data-sources db="63b27b48-3138-4a8a-80b8-9d019c0d8594" />
+      <scope>
+        <node kind="schema" qname="gestor_paquetes" />
+      </scope>
+    </mapping>
+  </component>
+</project>

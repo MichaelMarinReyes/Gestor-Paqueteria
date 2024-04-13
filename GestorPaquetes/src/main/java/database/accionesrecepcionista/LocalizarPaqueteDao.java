@@ -3,6 +3,7 @@ package database.accionesrecepcionista;
 import clases.puntosdecontrorutaydestino.Paquete;
 import clases.puntosdecontrorutaydestino.PuntoDeControl;
 import database.ConexionDB;
+import database.accionesadmin.PuntoDeControlDao;
 import jakarta.servlet.http.HttpServletResponse;
 import util.ExcepcionApi;
 
@@ -45,6 +46,7 @@ public class LocalizarPaqueteDao {
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 paqueteEntidad.setIdPaquete(generatedKeys.getInt(1));
+                this.aumentarNumeroPaqueteEnCola(paqueteEntidad.getIdPuntoControl());
                 return paqueteEntidad;
             }
             return null;
@@ -166,12 +168,70 @@ public class LocalizarPaqueteDao {
     }
 
     public void eliminarPaquete(int idPaquete) {
+        int idPuntoControl= this.obtenerPaquete(idPaquete).getIdPuntoControl();
         try {
             PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement("delete from paquete where id_paquete = ?;");
             preparedStatement.setInt(1, idPaquete);
             preparedStatement.execute();
+
+            disminuirNumeroPaquetesEnCola(idPuntoControl);
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void aumentarNumeroPaqueteEnCola(int idPuntoControl) {
+        Connection conexion = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            conexion = ConexionDB.getInstancia().conectar();
+            PuntoDeControlDao puntoDeControlDao = new PuntoDeControlDao();
+            int paquetesEnCola = puntoDeControlDao.obtenerPuntoControl(idPuntoControl).getPaquetesEnCola();
+            paquetesEnCola++;
+
+            String sql = "update punto_de_control set paquetes_en_cola = ? where id_punto_control = ?";
+            preparedStatement = conexion.prepareStatement(sql);
+            preparedStatement.setInt(1, paquetesEnCola);
+            preparedStatement.setInt(2, idPuntoControl);
+
+            int filasActualizadas = preparedStatement.executeUpdate();
+            if (filasActualizadas > 0) {
+                System.out.println("Se actualizó correctamente el número de paquetes_en_cola.");
+            } else {
+                System.out.println("No se realizó ninguna actualización.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al actualizar el número de paquetes_en_cola.", e);
+        }
+    }
+
+    private void disminuirNumeroPaquetesEnCola(int idPuntoControl) {
+        Connection conexion = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            conexion = ConexionDB.getInstancia().conectar();
+            PuntoDeControlDao puntoDeControlDao = new PuntoDeControlDao();
+            int paquetesEnCola = puntoDeControlDao.obtenerPuntoControl(idPuntoControl).getPaquetesEnCola();
+
+            if (paquetesEnCola > 0) {
+                paquetesEnCola--;
+            }
+
+            String sql = "update punto_de_control set paquetes_en_cola = ? where id_punto_control = ?";
+            preparedStatement = conexion.prepareStatement(sql);
+            preparedStatement.setInt(1, paquetesEnCola);
+            preparedStatement.setInt(2, idPuntoControl);
+
+            int filasActualizadas = preparedStatement.executeUpdate();
+
+            if (filasActualizadas > 0) {
+                System.out.println("Se actualizó correctamente el número de paquetes_en_cola.");
+            } else {
+                System.out.println("No se realizó ninguna actualización.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al actualizar el número de paquetes_en_cola.", e);
         }
     }
 }

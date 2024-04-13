@@ -2,6 +2,10 @@ package servicios;
 
 import clases.puntosdecontrorutaydestino.Paquete;
 import clases.puntosdecontrorutaydestino.PuntoDeControl;
+import clases.roles.Cliente;
+import database.accionesadmin.ClienteDao;
+import database.accionesadmin.PuntoDeControlDao;
+import database.accionesrecepcionista.BodegaDao;
 import database.accionesrecepcionista.LocalizarPaqueteDao;
 import jakarta.servlet.http.HttpServletResponse;
 import util.ExcepcionApi;
@@ -9,6 +13,7 @@ import java.util.List;
 
 public class ServicioRecepcionista {
     private LocalizarPaqueteDao localizarPaqueteDao = new LocalizarPaqueteDao();
+    private ClienteDao clienteDao = new ClienteDao();
 
     public List<Paquete> obtenerPaquetes() {
         return localizarPaqueteDao.obtenerPaquetes();
@@ -23,6 +28,23 @@ public class ServicioRecepcionista {
         if (localizarPaqueteDao.obtenerPaquete(idPaquete) != null) {
             throw ExcepcionApi.builder().code(HttpServletResponse.SC_CONFLICT).mensaje("Ya existe un paquete con ese id").build();
         }
+
+        if (clienteDao.obtenerCliente(paqueteEntidad.getNit()) == null) {
+            throw ExcepcionApi.builder().code(HttpServletResponse.SC_NOT_FOUND).mensaje("No existe un cliente con ese nit, debe registrarlo primero").build();
+        }
+
+        PuntoDeControlDao puntoDeControlDao = new PuntoDeControlDao();
+        PuntoDeControl puntoDeControl = puntoDeControlDao.obtenerPuntoControl(paqueteEntidad.getIdPuntoControl());
+
+        if (puntoDeControl != null) {
+            int paquetesEnCola = puntoDeControl.getPaquetesEnCola();
+            int maximaEnCola = puntoDeControl.getMaximaEnCola();
+
+            if (paquetesEnCola >= maximaEnCola) {
+                throw ExcepcionApi.builder().code(HttpServletResponse.SC_CONFLICT).mensaje("Este punto de control ya no tiene más espacio de almacenaje").build();
+            }
+        }
+
         return localizarPaqueteDao.crearPaquete(paqueteEntidad);
     }
 
