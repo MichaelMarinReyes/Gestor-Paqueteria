@@ -7,8 +7,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Recepcionista extends Usuario{
+public class Recepcionista {
     private int idRecepcionista;
     private int idPaquete;
+    private String nombre;
+    private String apellido;
+    private String contraseña;
+    private boolean sesionActiva;
+    private String rol;
 
 }

@@ -3,11 +3,11 @@ package servicios;
 import clases.puntosdecontrorutaydestino.*;
 import clases.roles.Cliente;
 import clases.roles.Operador;
+import clases.roles.Recepcionista;
 import database.accionesadmin.*;
 import jakarta.servlet.http.HttpServletResponse;
 import util.ExcepcionApi;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class ServicioAdministrador {
@@ -15,6 +15,7 @@ public class ServicioAdministrador {
     private RutaDao rutaDao = new RutaDao();
     private ClienteDao clienteDao = new ClienteDao();
     private OperadorDao operadorDao = new OperadorDao();
+    private RecepcionistaDao recepcionistaDao = new RecepcionistaDao();
 
     //CRUD PARA PUNTOS DE CONTROL
     public List<PuntoDeControl> obtenerPuntosDeControl() {
@@ -135,8 +136,10 @@ public class ServicioAdministrador {
     }
 
     public void eliminarCliente(String nit) {
-        Cliente ruta = clienteDao.obtenerCliente(nit);
-        clienteDao.eliminarCliente(ruta.getNit());
+        Cliente cliente = clienteDao.obtenerCliente(nit);
+        if (cliente != null) {
+            clienteDao.eliminarCliente(cliente.getNit());
+        }
     }
 
     //CRUD PARA OPERADORES
@@ -182,8 +185,55 @@ public class ServicioAdministrador {
     public void eliminarOperador(int idOperador) throws ExcepcionApi {
         Operador operador = operadorDao.obtenerOperador(idOperador);
         if (operador == null) {
-            throw  ExcepcionApi.builder().code(HttpServletResponse.SC_NOT_FOUND).mensaje("No se encontró el operador").build();
+            throw ExcepcionApi.builder().code(HttpServletResponse.SC_NOT_FOUND).mensaje("No se encontró el operador").build();
         }
         operadorDao.eliminarOperador(idOperador);
+    }
+
+    //CRUD PARA RECEPCIONISTAS
+    public Recepcionista crearRecepcionista(Recepcionista recepcionistaEntidad) throws ExcepcionApi {
+        if (recepcionistaEntidad == null) {
+            throw ExcepcionApi.builder().code(HttpServletResponse.SC_BAD_REQUEST).mensaje("No se proporcionó recepcionista").build();
+        }
+
+        if (recepcionistaDao.obtenerRecepcionista(recepcionistaEntidad.getIdRecepcionista()) != null) {
+            throw ExcepcionApi.builder().code(HttpServletResponse.SC_CONFLICT).mensaje("El recepcionista ya existe en la base de datos").build();
+        }
+        return recepcionistaDao.crearRecepcionista(recepcionistaEntidad);
+    }
+
+    public List<Recepcionista> obtenerRecepcionistas() {
+        return recepcionistaDao.obtenerRecepcionistas();
+    }
+
+    public void actualizarRecepcionista(Recepcionista recepcionistaEntidad, int idRecepcionista) {
+        try {
+            Recepcionista recepcionista = recepcionistaDao.obtenerRecepcionista(idRecepcionista);
+            if (recepcionista != null) {
+                recepcionista.setIdRecepcionista(recepcionistaEntidad.getIdRecepcionista());
+                recepcionista.setIdPaquete(recepcionistaEntidad.getIdPaquete());
+                recepcionista.setNombre(recepcionistaEntidad.getNombre());
+                recepcionista.setApellido(recepcionistaEntidad.getApellido());
+                recepcionista.setContraseña(recepcionistaEntidad.getContraseña());
+                recepcionista.setSesionActiva(recepcionistaEntidad.isSesionActiva());
+                recepcionista.setRol(recepcionistaEntidad.getRol());
+                recepcionistaDao.actualizarRecepcionista(recepcionista, idRecepcionista);
+            } else {
+                throw new ExcepcionApi(HttpServletResponse.SC_NOT_FOUND, "Recepcionista no encontrado en la base de datos");
+            }
+        } catch (RuntimeException | ExcepcionApi e) {
+            try {
+                throw new ExcepcionApi(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al editar el recepcionista: " + e.getMessage());
+            } catch (ExcepcionApi ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
+    public void eliminarRecepcionista(int idRecepcionista) {
+        Recepcionista recepcionista = recepcionistaDao.obtenerRecepcionista(idRecepcionista);
+        if (recepcionista != null) {
+            recepcionistaDao.eliminarRecepcionista(idRecepcionista);
+        }
     }
 }

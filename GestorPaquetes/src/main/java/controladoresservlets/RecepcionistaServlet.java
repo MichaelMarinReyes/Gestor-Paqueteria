@@ -2,8 +2,9 @@ package controladoresservlets;
 
 import clases.roles.Cliente;
 import clases.roles.Operador;
+import clases.roles.Recepcionista;
 import com.google.gson.Gson;
-import database.accionesadmin.OperadorDao;
+import database.accionesadmin.RecepcionistaDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -16,26 +17,26 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "gestionar-operadores", urlPatterns = "/gestionar-operadores/*")
-public class OperadorServlet extends HttpServlet {
-    private OperadorDao operadorDao = new OperadorDao();
-    private ServicioAdministrador servicioAdministrador = new ServicioAdministrador();
+@WebServlet(name = "gestionar-recepcionistas", urlPatterns = "/gestionar-recepcionistas/*")
+public class RecepcionistaServlet extends HttpServlet {
     private Gson gson = new Gson();
+    private RecepcionistaDao recepcionistaDao = new RecepcionistaDao();
+    private ServicioAdministrador servicioAdministrador = new ServicioAdministrador();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String idParametro = req.getParameter("idOperador");
+        String idParametro = req.getParameter("idRecepcionista");
         if (idParametro != null && !idParametro.isEmpty()) {
-            Operador operador = operadorDao.obtenerOperador(Integer.parseInt(idParametro));
-            if (operador != null) {
+            Recepcionista recepcionista = recepcionistaDao.obtenerRecepcionista(Integer.parseInt(idParametro));
+            if (recepcionista != null) {
                 resp.setContentType("application/json");
                 resp.setCharacterEncoding("UTF-8");
-                resp.getWriter().write(gson.toJson(operador));
+                resp.getWriter().write(gson.toJson(recepcionista));
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
         } else {
-            this.sendResponse(resp, servicioAdministrador.obtenerOperadores());
+            this.sendResponse(resp, servicioAdministrador.obtenerRecepcionistas());
         }
     }
 
@@ -43,8 +44,8 @@ public class OperadorServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             Gson gson = new Gson();
-            Operador operador = gson.fromJson(req.getReader(), Operador.class);
-            this.sendResponse(resp, servicioAdministrador.crearOperador(operador));
+            Recepcionista recepcionista = gson.fromJson(req.getReader(), Recepcionista.class);
+            this.sendResponse(resp, servicioAdministrador.crearRecepcionista(recepcionista));
         } catch (Exception e) {
             this.sendError(resp, ExcepcionApi.builder()
                     .code(HttpServletResponse.SC_INTERNAL_SERVER_ERROR)
@@ -56,12 +57,12 @@ public class OperadorServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            String idOperador = req.getParameter("idOperador");
+            String idOperador = req.getParameter("idRecepcionista");
             Gson gson = new Gson();
             BufferedReader reader = req.getReader();
-            Operador operador = gson.fromJson(reader, Operador.class);
+            Recepcionista recepcionista = gson.fromJson(reader, Recepcionista.class);
             try {
-                servicioAdministrador.actualizarOperador(operador, Integer.parseInt(idOperador));
+                servicioAdministrador.actualizarRecepcionista(recepcionista, Integer.parseInt(idOperador));
                 resp.setStatus(HttpServletResponse.SC_OK);
             } catch (Exception e) {
                 this.sendError(resp, ExcepcionApi.builder()
@@ -80,15 +81,11 @@ public class OperadorServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String idOperador = req.getParameter("idOperador");
-        if (idOperador != null && !idOperador.isEmpty()) {
-            Operador operador = operadorDao.obtenerOperador(Integer.parseInt(idOperador));
-            if (operador != null) {
-                try {
-                    servicioAdministrador.eliminarOperador(operador.getIdOperador());
-                } catch (ExcepcionApi e) {
-                    throw new RuntimeException(e);
-                }
+        String idRecepcionista = req.getParameter("idRecepcionista");
+        if (idRecepcionista != null && !idRecepcionista.isEmpty()) {
+            Recepcionista recepcionista = recepcionistaDao.obtenerRecepcionista(Integer.parseInt(idRecepcionista));
+            if (recepcionista != null) {
+                servicioAdministrador.eliminarRecepcionista(recepcionista.getIdRecepcionista());
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
