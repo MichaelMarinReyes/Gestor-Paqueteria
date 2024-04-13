@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 @NoArgsConstructor
@@ -15,6 +16,6 @@ public class Paquete {
     private String estadoPaquete;
     private int idDestino;
     private int idPuntoControl;
-    private String horaEntrada;
-    private String horaSalida;
+    private LocalTime horaEntrada;
+    private LocalTime horaSalida;
 }
