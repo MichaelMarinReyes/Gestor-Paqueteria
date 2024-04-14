@@ -1,6 +1,7 @@
 package controladoresservlets;
 
-import clases.roles.Administrador;
+import com.google.gson.JsonSyntaxException;
+import clases.roles.Usuario;
 import database.LoginDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -19,23 +20,6 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        BufferedReader reader = req.getReader();
-        Gson gson = new Gson();
-        Administrador administrador = gson.fromJson(reader, Administrador.class);
-
-        int usuario = administrador.getIdAdministrador();
-        String contraseña = administrador.getContraseña();
-        String rol = administrador.getRol();
-        boolean credencialesValidas = loginDao.verificarCredenciales(String.valueOf(usuario), contraseña, rol);
-
-        if (credencialesValidas) {
-            resp.setStatus(HttpServletResponse.SC_OK);
-            //resp.getContentType("aqui se redirige a la correspondiente");
-            resp.getWriter().write("/admin");
-        } else {
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            resp.getWriter().write("Credenciales inválidas. Por favor, inténtalo de nuevo.");
-        }
     }
 
     //GUARDAR UN RECURSO
@@ -43,20 +27,29 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         BufferedReader reader = req.getReader();
         Gson gson = new Gson();
-        Administrador administrador = gson.fromJson(reader, Administrador.class);
 
-        int usuario = administrador.getIdAdministrador();
-        String contraseña = administrador.getContraseña();
-        String rol = administrador.getRol();
-        boolean credencialesValidas = loginDao.verificarCredenciales(String.valueOf(usuario), contraseña, rol);
+        try {
+            Usuario usuario = gson.fromJson(reader, Usuario.class);
+            if (usuario != null) {
+                int idUsuario = usuario.getUsuario();
+                String contraseña = usuario.getContraseña();
+                String rol = usuario.getRol();
+                boolean credencialesValidas = loginDao.verificarCredenciales(String.valueOf(idUsuario), contraseña, rol);
 
-        if (credencialesValidas) {
-            resp.setStatus(HttpServletResponse.SC_OK);
-            //resp.getContentType("aqui se redirige a la correspondiente");
-            resp.getWriter().write("/admin");
-        } else {
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            resp.getWriter().write("Credenciales inválidas. Por favor, inténtalo de nuevo.");
+                if (credencialesValidas) {
+                    resp.setStatus(HttpServletResponse.SC_OK);
+                    //resp.getWriter().write("/admin");
+                } else {
+                    resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    resp.getWriter().write("Credenciales inválidas. Por favor, inténtalo de nuevo.");
+                }
+            } else {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().write("Error al procesar la solicitud. El objeto Usuario es nulo o no se pudo deserializar correctamente.");
+            }
+        } catch (JsonSyntaxException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().write("Error de sintaxis JSON en la solicitud. Verifica el formato de los datos enviados.");
         }
     }
 

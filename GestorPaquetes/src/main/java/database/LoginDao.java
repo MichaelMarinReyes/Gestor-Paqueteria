@@ -20,27 +20,25 @@ public class LoginDao {
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     return resultSet.next();
                 }
-            } else if (tipoUsuario.equalsIgnoreCase("Operador")) {
+            } else if (tipoUsuario.equalsIgnoreCase("operador")) {
                 PreparedStatement preparedStatement = connection.prepareStatement(queryOperador);
                 preparedStatement.setString(1, usuario);
                 preparedStatement.setString(2, contraseña);
 
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     return resultSet.next();
-
                 }
-            } else if (tipoUsuario.equalsIgnoreCase("Recepcionista")) {
+            } else if (tipoUsuario.equalsIgnoreCase("recepcionista")) {
                 PreparedStatement preparedStatement = connection.prepareStatement(queryRecepcionista);
                 preparedStatement.setString(1, usuario);
                 preparedStatement.setString(2, contraseña);
 
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    System.out.println("entro recepcionista");
                     return resultSet.next();
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             return false;
         }
         return false;
