@@ -52,13 +52,19 @@ export default {
           contraseña: this.contraseña,
           rol: this.rol
         });
-        if (respuesta.data === 'success') {
+        if (respuesta.status === 200) {
           this.sesionValida = true;
+          if (this.rol === 'admin') {
+            this.$router.push('/administrador');
+          } else if(this.rol === 'operador') {
+            this.$router.push('/operador');
+          } else if(this.rol === 'recepcionista') {
+            this.$router.push('/recepcionista');
+          }
         } else {
           this.sesionInvalida = true;
         }
       } catch (error) {
-        console.error('Error al iniciar sesión:', error);
         this.sesionInvalida = true;
       }
     }
