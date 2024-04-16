@@ -1,17 +1,20 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <IniciarSesion msg="Bienvenido al gestor de paquetes"/>
+  <div id="id">
+    <!-- <img alt="Vue logo" src="../src/assets/logo.png"> -->
+   <!-- <IniciarSesion msg="Bienvenido al gestor de paquetes"/> -->
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
-import IniciarSesion from "@/components/IniciarSesion.vue";
-
+//import IniciarSesion from "@/components/IniciarSesion.vue";
+/*
 export default {
   name: 'App',
   components: {
     IniciarSesion
   }
-}
+}*/
 </script>
 
 <style>

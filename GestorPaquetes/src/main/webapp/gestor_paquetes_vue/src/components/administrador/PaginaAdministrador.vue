@@ -42,12 +42,11 @@
       <button onclick="crearOperador()">Crear Operador</button>
       <button onclick="crearRecepcionista()">Crear Recepcionista</button>
       <h2>Reportes</h2>
-      <button onclick="generarReporte('usuarios')">Reporte de Usuarios</button>
-      <button onclick="generarReporte('rutas')">Reporte de Rutas</button>
-      <button onclick="generarReporte('clientes')">Reporte de Clientes</button>
-      <button onclick="generarReporte('operadores')">Reporte de Operadores</button>
-      <button onclick="generarReporte('recepcionistas')">Reporte de Recepcionistas</button>
-
+      <button @click="generarReporte('usuarios')">Reporte de Usuarios</button>
+      <button @click="generarReporte('rutas')">Reporte de Rutas</button>
+      <button @click="generarReporte('clientes')">Reporte de Clientes</button>
+      <button @click="generarReporte('operadores')">Reporte de Operadores</button>
+      <button @click="generarReporte('recepcionistas')">Reporte de Recepcionistas</button>
     </div>
   </div>
 </template>
@@ -55,12 +54,15 @@
 <script>
 export default {
   name: 'PaginaAdministrador',
-  data() {
-    return {
-      subtitulo: 'subtitulo del componente'
+  methods: {
+    crearRuta() {
+    this.$router.push('/crear-ruta')
+    },
+    generarReporte() {
+    alert("reporte")
     }
   }
-}
+};
 </script>
 
 <style scoped>

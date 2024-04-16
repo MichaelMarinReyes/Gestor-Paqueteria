@@ -24,6 +24,8 @@ import RegistrarCliente from "@/components/recepcionista/RegistrarCliente.vue";
 import RegistrarPaqueteEntregado from "@/components/recepcionista/RegistrarPaqueteEntregado.vue";
 import PaginaOperador from "@/components/operador/PaginaOperador.vue";
 
+//const Administrador = {template: PaginaAdministrador}
+
 const routes = [
     {path: '/', component: IniciarSesion},
     //GESTIONES ADMINISTRADOR

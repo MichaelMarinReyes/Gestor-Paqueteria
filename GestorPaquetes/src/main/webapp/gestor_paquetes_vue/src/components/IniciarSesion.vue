@@ -1,4 +1,5 @@
 <template>
+  <img alt="Vue logo" src="../assets/logo.png">
   <div class="contenedor-login">
     <h1>Iniciar sesión</h1>
     <form @submit.prevent="iniciarSesion">
