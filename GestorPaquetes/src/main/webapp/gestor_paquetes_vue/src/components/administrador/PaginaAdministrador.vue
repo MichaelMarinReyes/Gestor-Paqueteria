@@ -1,65 +1,131 @@
 <template>
+  <div class="navbar">
+    <a href="/administrador">Administrador</a>
+    <a href="/administrador">Usuarios</a>
+    <a href="#">Clientes</a>
+    <a href="/gestionar-operadores">Operadores</a>
+    <a href="#">Recepcionistas</a>
+    <div class="dropdown">
+      <button class="dropbtn">Reportes
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-content">
+        <a href="#">Reporte de usuarios</a>
+        <a href="#">Reporte de rutas</a>
+        <a href="#">Reporte de clientes</a>
+        <a href="#">Reporte de operadores</a>
+        <a href="#">Reporte de recepcionistas</a>
+      </div>
+    </div>
+    <a href="../">Cerrar sesión</a>
+  </div>
   <div>
-    <h2>Panel de Administrador</h2>
     <div class="login-container">
-      <h2>Tabla de Datos</h2>
-
+      <h1>Usuarios</h1>
+      <h2>Clientes</h2>
       <table>
         <thead>
         <tr>
+          <th>Nit</th>
           <th>Nombre</th>
+          <th>Apellido</th>
           <th>Rol</th>
-          <th>Correo Electrónico</th>
+          <th>Estado de Cuenta</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <td>Admin 1</td>
-          <td>Administrador</td>
-          <td>admin1@example.com</td>
-        </tr>
-        <tr>
-          <td>Operador 1</td>
-          <td>Operador</td>
-          <td>operador1@example.com</td>
-        </tr>
-        <tr>
-          <td>Recepcionista 1</td>
-          <td>Recepcionista</td>
-          <td>recepcionista1@example.com</td>
-        </tr>
-        <tr>
-          <td>Cliente 1</td>
-          <td>Cliente</td>
-          <td>cliente1@example.com</td>
+        <tr v-for="cliente in clientes" :key="cliente.nit">
+          <td>{{ cliente.nit }}</td>
+          <td>{{ cliente.nombre }}</td>
+          <td>{{ cliente.apellido }}</td>
+          <td>{{ cliente.rol }}</td>
+          <td>{{ cliente.estadoCuenta }}</td>
         </tr>
         </tbody>
       </table>
-
-      <h2>Opciones</h2>
-      <button onclick="crearRuta()">Crear Ruta</button>
-      <button onclick="crearCliente()">Crear Cliente</button>
-      <button onclick="crearOperador()">Crear Operador</button>
-      <button onclick="crearRecepcionista()">Crear Recepcionista</button>
-      <h2>Reportes</h2>
-      <button @click="generarReporte('usuarios')">Reporte de Usuarios</button>
-      <button @click="generarReporte('rutas')">Reporte de Rutas</button>
-      <button @click="generarReporte('clientes')">Reporte de Clientes</button>
-      <button @click="generarReporte('operadores')">Reporte de Operadores</button>
-      <button @click="generarReporte('recepcionistas')">Reporte de Recepcionistas</button>
+      <h2>Operadores</h2>
+      <table>
+        <thead>
+        <tr>
+          <th>Id</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Rol</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="operador in operadores" :key="operador.idOperador">
+          <td>{{ operador.idOperador }}</td>
+          <td>{{ operador.nombre }}</td>
+          <td>{{ operador.apellido }}</td>
+          <td>{{ operador.rol }}</td>
+        </tr>
+        </tbody>
+      </table>
+      <h2>Recepcionistas</h2>
+      <table>
+        <thead>
+        <tr>
+          <th>Id</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>rol</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="recepcionista in recepcionistas" :key="recepcionista.idRecepcionista">
+          <td>{{ recepcionista.idRecepcionista }}</td>
+          <td>{{recepcionista.nombre}}</td>
+          <td>{{recepcionista.apellido}}</td>
+          <td>{{recepcionista.rol}}</td>
+        </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'PaginaAdministrador',
+  data() {
+    return {
+      operadores: [],
+      clientes: [],
+      recepcionistas: []
+    };
+  },
+  mounted() {
+    this.obtenerOperadores();
+    this.obtenerClientes();
+    this.obtenerRecepcionistas();
+  },
   methods: {
-    crearRuta() {
-    this.$router.push('/crear-ruta')
+    async obtenerClientes() {
+      try {
+        const response = await axios.get('http://localhost:8090/gestionar-clientes');
+        this.clientes = response.data;
+      } catch (error) {
+        console.error('Error al obtener clientes:', error);
+      }
     },
-    generarReporte() {
-    alert("reporte")
+    async obtenerOperadores() {
+      try {
+        const response = await axios.get('http://localhost:8090/gestionar-operadores');
+        this.operadores = response.data;
+      } catch (error) {
+        console.error('Error al obtener operadores:', error);
+      }
+    },
+    async obtenerRecepcionistas() {
+      try {
+        const response = await axios.get('http://localhost:8090/gestionar-recepcionistas');
+        this.recepcionistas = response.data;
+      } catch (error) {
+        console.log('Error al obtener recepcionistas:', error)
+      }
     }
   }
 };
@@ -78,10 +144,73 @@ th, td {
 }
 
 th {
-  background-color: #f2f2f2;
+  background-color: rgb(0, 98, 204);
 }
 
 button {
   margin: 10px;
 }
+
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+  font-family: Arial;
+  margin: 0px;
+}
+
+.navbar a {
+  float: left;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+
+.dropdown .dropbtn {
+  font-size: 16px;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: rgb(0, 98, 204);
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
 </style>

@@ -23,6 +23,7 @@ import RecibirPaquete from "@/components/recepcionista/RecibirPaquete.vue";
 import RegistrarCliente from "@/components/recepcionista/RegistrarCliente.vue";
 import RegistrarPaqueteEntregado from "@/components/recepcionista/RegistrarPaqueteEntregado.vue";
 import PaginaOperador from "@/components/operador/PaginaOperador.vue";
+import GestionarOperador from "@/components/administrador/GestionarOperador.vue";
 
 //const Administrador = {template: PaginaAdministrador}
 
@@ -35,6 +36,7 @@ const routes = [
     {path: '/crear-punto-de-control', component: CrearPuntoControl},
     {path: '/crear-recepcionista', component: CrearRecepcionista},
     {path: '/crear-ruta', component: CrearRuta},
+    {path: '/gestionar-operadores', component: GestionarOperador},
     //GESTIONES OPERADOR
     {path: '/operador', component: PaginaOperador},
     {path: '/cambiar-punto-control', component: CambiarPuntoControl},

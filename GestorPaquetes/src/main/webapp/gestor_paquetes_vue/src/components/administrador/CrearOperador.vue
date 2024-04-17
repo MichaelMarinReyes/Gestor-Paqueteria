@@ -4,7 +4,7 @@
 
     <form action="#" method="post" id="crearOperadorForm">
       <div class="form-group">
-        <label for="idPuntoControl">ID Punto de Control:</label>
+        <label for="idPuntoControl">ID Operador:</label>
         <input type="text" id="idPuntoControl" name="idPuntoControl" required>
       </div>
 
