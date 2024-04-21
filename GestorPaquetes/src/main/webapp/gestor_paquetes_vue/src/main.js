@@ -11,6 +11,9 @@ import CrearOperador from "@/components/administrador/CrearOperador.vue";
 import CrearPuntoControl from "@/components/administrador/CrearPuntoControl.vue";
 import CrearRecepcionista from "@/components/administrador/CrearRecepcionista.vue";
 import CrearRuta from "@/components/administrador/CrearRuta.vue";
+import GestionarOperador from "@/components/administrador/GestionarOperador.vue";
+import GestionarCliente from "@/components/administrador/GestionarCliente.vue";
+import EditarCliente from "@/components/administrador/EditarCliente.vue"
 
 //GESTIONES OPERADOR
 import CambiarPuntoControl from "@/components/operador/CambiarPuntoControl.vue";
@@ -23,9 +26,6 @@ import RecibirPaquete from "@/components/recepcionista/RecibirPaquete.vue";
 import RegistrarCliente from "@/components/recepcionista/RegistrarCliente.vue";
 import RegistrarPaqueteEntregado from "@/components/recepcionista/RegistrarPaqueteEntregado.vue";
 import PaginaOperador from "@/components/operador/PaginaOperador.vue";
-import GestionarOperador from "@/components/administrador/GestionarOperador.vue";
-
-//const Administrador = {template: PaginaAdministrador}
 
 const routes = [
     {path: '/', component: IniciarSesion},
@@ -37,6 +37,8 @@ const routes = [
     {path: '/crear-recepcionista', component: CrearRecepcionista},
     {path: '/crear-ruta', component: CrearRuta},
     {path: '/gestionar-operadores', component: GestionarOperador},
+    {path: '/gestionar-clientes', component: GestionarCliente},
+    {path: '/editar-cliente', component: EditarCliente},
     //GESTIONES OPERADOR
     {path: '/operador', component: PaginaOperador},
     {path: '/cambiar-punto-control', component: CambiarPuntoControl},
@@ -57,8 +59,5 @@ const router = createRouter({
 
 const app = createApp(App);
 
-// Usa el enrutador configurado en la aplicación Vue
 app.use(router);
-
-// Monta la aplicación en el elemento con id 'app'
 app.mount('#app');

@@ -29,12 +29,12 @@
           <td>{{ operador.apellido }}</td>
           <td>{{ operador.rol }}</td>
           <td>
-            <button @click="editarOperador(operador)" title="Editar">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button @click="deshabilitarOperador(operador)" title="Deshabilitar">
-              <i class="fas fa-ban"></i>
-            </button>
+            <!-- Icono de editar -->
+            <i class="fas fa-edit" @click="editarOperador(operador)"></i>
+            <!-- Icono de deshabilitar -->
+            <i class="fas fa-ban" @click="deshabilitarOperador(operador)"></i>
+            <!-- Icono de eliminar -->
+            <i class="fas fa-trash-alt" @click="eliminarOperador(operador)"></i>
           </td>
         </tr>
         </tbody>
@@ -81,12 +81,13 @@ export default {
       }
     },
     async editarOperador(operador) {
-      // Aquí puedes implementar la lógica para editar un operador
       alert(`Editar operador: ${operador.nombre} ${operador.apellido}`);
     },
     async deshabilitarOperador(operador) {
-      // Aquí puedes implementar la lógica para deshabilitar un operador
       alert(`Deshabilitar operador: ${operador.nombre} ${operador.apellido}`);
+    },
+    async eliminarOperador(operador) {
+      console.log('Eliminar operador:', operador);
     },
     async crearNuevoOperador() {
       this.$router.push('/crear-operador');
@@ -131,10 +132,6 @@ button {
   background-color: transparent;
 }
 
-button i {
-  font-size: 16px;
-}
-
 .input-group {
   display: flex;
   align-items: center;
@@ -144,5 +141,11 @@ button i {
 .input-group input {
   flex: 1;
   margin-right: 5px;
+}
+
+i {
+  cursor: pointer;
+  margin-right: 5px;
+  color: #007bff;
 }
 </style>

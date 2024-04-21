@@ -8,6 +8,7 @@ import database.accionesadmin.*;
 import jakarta.servlet.http.HttpServletResponse;
 import util.ExcepcionApi;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class ServicioAdministrador {
@@ -108,7 +109,6 @@ public class ServicioAdministrador {
         if (clienteDao.obtenerCliente(nit) != null) {
             throw ExcepcionApi.builder().code(HttpServletResponse.SC_CONFLICT).mensaje("El NIT ya está registrado").build();
         }
-
         return clienteDao.crearCliente(clienteEntidad);
     }
 
@@ -167,7 +167,7 @@ public class ServicioAdministrador {
                 operador.setApellido(operadorEntidad.getApellido());
                 operador.setContraseña(operadorEntidad.getContraseña());
                 operador.setIdPuntoControl(operadorEntidad.getIdPuntoControl());
-                operador.setSesionActiva(operador.isSesionActiva());
+                operador.setSesionActiva(operador.getSesionActiva());
                 operador.setRol(operadorEntidad.getRol());
                 operadorDao.actualizarOperador(operador, idOperador);
             } else {
@@ -215,7 +215,7 @@ public class ServicioAdministrador {
                 recepcionista.setNombre(recepcionistaEntidad.getNombre());
                 recepcionista.setApellido(recepcionistaEntidad.getApellido());
                 recepcionista.setContraseña(recepcionistaEntidad.getContraseña());
-                recepcionista.setSesionActiva(recepcionistaEntidad.isSesionActiva());
+                recepcionista.setSesionActiva(recepcionistaEntidad.getSesionActiva());
                 recepcionista.setRol(recepcionistaEntidad.getRol());
                 recepcionistaDao.actualizarRecepcionista(recepcionista, idRecepcionista);
             } else {

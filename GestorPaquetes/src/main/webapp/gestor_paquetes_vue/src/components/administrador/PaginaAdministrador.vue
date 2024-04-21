@@ -2,7 +2,7 @@
   <div class="navbar">
     <a href="/administrador">Administrador</a>
     <a href="/administrador">Usuarios</a>
-    <a href="#">Clientes</a>
+    <a href="/gestionar-clientes">Clientes</a>
     <a href="/gestionar-operadores">Operadores</a>
     <a href="#">Recepcionistas</a>
     <div class="dropdown">
@@ -51,6 +51,7 @@
           <th>Nombre</th>
           <th>Apellido</th>
           <th>Rol</th>
+          <th>Estado de cuenta</th>
         </tr>
         </thead>
         <tbody>
@@ -59,6 +60,7 @@
           <td>{{ operador.nombre }}</td>
           <td>{{ operador.apellido }}</td>
           <td>{{ operador.rol }}</td>
+          <td>{{operador.sesionActiva}}</td>
         </tr>
         </tbody>
       </table>
@@ -69,7 +71,8 @@
           <th>Id</th>
           <th>Nombre</th>
           <th>Apellido</th>
-          <th>rol</th>
+          <th>Rol</th>
+          <th>Estado de cuenta</th>
         </tr>
         </thead>
         <tbody>
@@ -78,6 +81,7 @@
           <td>{{recepcionista.nombre}}</td>
           <td>{{recepcionista.apellido}}</td>
           <td>{{recepcionista.rol}}</td>
+          <td>{{recepcionista.sesionActiva}}</td>
         </tr>
         </tbody>
       </table>

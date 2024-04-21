@@ -4,6 +4,7 @@ import clases.roles.Cliente;
 import database.ConexionDB;
 import jakarta.servlet.http.HttpServletResponse;
 import util.ExcepcionApi;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,38 +12,29 @@ import java.util.List;
 public class ClienteDao {
 
     public Cliente crearCliente(Cliente cliente) throws ExcepcionApi {
-        if (cliente == null) {
-            throw ExcepcionApi.builder().code(HttpServletResponse.SC_BAD_REQUEST).mensaje("El cliente proporcionado es nulo").build();
-        }
+        try {
+            if (cliente == null) {
+                throw ExcepcionApi.builder().code(HttpServletResponse.SC_BAD_REQUEST).mensaje("El cliente proporcionado es nulo").build();
+            }
 
-        try (Connection connection = ConexionDB.getInstancia().conectar();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "insert into usuario (nit, nombre, apellido, contraseña, rol, estado_cuenta) values (?, ?, ?, ?, ?, ?);",
-                     Statement.RETURN_GENERATED_KEYS)) {
-
+            PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement("insert into usuario (nit, nombre, apellido, contraseña, rol, estado_cuenta) values (?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, cliente.getNit());
             preparedStatement.setString(2, cliente.getNombre());
             preparedStatement.setString(3, cliente.getApellido());
             preparedStatement.setString(4, cliente.getContraseña());
             preparedStatement.setString(5, cliente.getRol());
             preparedStatement.setString(6, cliente.getEstadoCuenta());
-
-            int rowsAffected = preparedStatement.executeUpdate();
-            if (rowsAffected == 0) {
-                throw new SQLException("No se pudo crear el cliente");
+            preparedStatement.executeUpdate();
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if (resultSet.next()) {
+                cliente.setNit(resultSet.getString(1));
+                return cliente;
             }
-
-            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    cliente.setNit(generatedKeys.getString(1));
-                    return cliente;
-                } else {
-                    throw new SQLException("No se pudo obtener el ID generado para el cliente");
-                }
-            }
+            return null;
         } catch (SQLException e) {
-            throw new RuntimeException("Error al crear el cliente: " + e.getMessage(), e);
+            System.out.println("Error en DAO " + e.getMessage());
         }
+        return null;
     }
 
     public List<Cliente> obtenerClientes() {
@@ -103,7 +95,7 @@ public class ClienteDao {
                 throw new SQLException("La actualización del cliente no afectó ninguna fila en la base de datos.");
             }
         } catch (SQLException e) {
-            System.out.println( "Error en dao" +e.getMessage());
+            System.out.println("Error en dao" + e.getMessage());
         }
     }
 

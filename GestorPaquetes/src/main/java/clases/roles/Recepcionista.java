@@ -13,7 +13,7 @@ public class Recepcionista {
     private String nombre;
     private String apellido;
     private String contraseña;
-    private boolean sesionActiva;
+    private String sesionActiva;
     private String rol;
 
 }

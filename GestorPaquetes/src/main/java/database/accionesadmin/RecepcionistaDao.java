@@ -19,7 +19,7 @@ public class RecepcionistaDao {
             preparedStatement.setString(2, recepcionista.getNombre());
             preparedStatement.setString(3, recepcionista.getApellido());
             preparedStatement.setString(4, recepcionista.getContraseña());
-            preparedStatement.setBoolean(5, recepcionista.isSesionActiva());
+            preparedStatement.setString(5, recepcionista.getSesionActiva());
             preparedStatement.setString(6, recepcionista.getRol());
             preparedStatement.execute();
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
@@ -45,7 +45,7 @@ public class RecepcionistaDao {
                 recepcionista.setNombre(resultSet.getString("nombre"));
                 recepcionista.setApellido(resultSet.getString("apellido"));
                 recepcionista.setContraseña(resultSet.getString("contraseña"));
-                recepcionista.setSesionActiva(resultSet.getBoolean("sesion_activa"));
+                recepcionista.setSesionActiva(resultSet.getString("sesion_activa"));
                 recepcionista.setRol(resultSet.getString("rol"));
                 recepcionistas.add(recepcionista);
             }
@@ -67,7 +67,7 @@ public class RecepcionistaDao {
                 recepcionista.setNombre(resultSet.getString("nombre"));
                 recepcionista.setApellido(resultSet.getString("apellido"));
                 recepcionista.setContraseña(resultSet.getString("contraseña"));
-                recepcionista.setSesionActiva(resultSet.getBoolean("sesion_activa"));
+                recepcionista.setSesionActiva(resultSet.getString("sesion_activa"));
                 recepcionista.setRol(resultSet.getString("rol"));
                 return recepcionista;
             }
@@ -86,7 +86,7 @@ public class RecepcionistaDao {
             preparedStatement.setString(3, recepcionista.getNombre());
             preparedStatement.setString(4, recepcionista.getApellido());
             preparedStatement.setString(5, recepcionista.getContraseña());
-            preparedStatement.setBoolean(6, recepcionista.isSesionActiva());
+            preparedStatement.setString(6, recepcionista.getSesionActiva());
             preparedStatement.setString(7, recepcionista.getRol());
             preparedStatement.setInt(8, idRecepcionista);
 

@@ -21,7 +21,7 @@ public class OperadorDao {
             preparedStatement.setString(3, operador.getApellido());
             preparedStatement.setString(4, operador.getContraseña());
             preparedStatement.setInt(5, operador.getIdPuntoControl());
-            preparedStatement.setBoolean(6, operador.isSesionActiva());
+            preparedStatement.setString(6, operador.getSesionActiva());
             preparedStatement.setString(7, operador.getRol());
             preparedStatement.execute();
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
@@ -48,14 +48,15 @@ public class OperadorDao {
                 operador.setIdPuntoControl(resultSet.getInt("id_punto_control"));
                 operador.setContraseña(resultSet.getString("contraseña"));
                 operador.setIdPuntoControl(resultSet.getInt("id_punto_control"));
-                operador.setSesionActiva(resultSet.getBoolean("sesion_activa"));
+                operador.setSesionActiva(resultSet.getString("sesion_activa"));
                 operador.setRol(resultSet.getString("rol"));
                 operadores.add(operador);
             }
             return operadores;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
+        return null;
     }
 
     public Operador obtenerOperador(int id) {
@@ -71,7 +72,7 @@ public class OperadorDao {
                 operador.setIdPuntoControl(resultSet.getInt("id_punto_control"));
                 operador.setContraseña(resultSet.getString("contraseña"));
                 operador.setIdPuntoControl(resultSet.getInt("id_punto_control"));
-                operador.setSesionActiva(resultSet.getBoolean("sesion_activa"));
+                operador.setSesionActiva(resultSet.getString("sesion_activa"));
                 operador.setRol(resultSet.getString("rol"));
                 return operador;
             }
@@ -90,7 +91,7 @@ public class OperadorDao {
             preparedStatement.setString(3, operador.getApellido());
             preparedStatement.setString(4, operador.getContraseña());
             preparedStatement.setInt(5, operador.getIdPuntoControl());
-            preparedStatement.setBoolean(6, operador.isSesionActiva());
+            preparedStatement.setString(6, operador.getSesionActiva());
             preparedStatement.setString(7, operador.getRol());
             preparedStatement.setInt(8, idOperador);
 

@@ -13,6 +13,6 @@ public class Operador {
     private String apellido;
     private String contraseña;
     private int idPuntoControl;
-    private boolean sesionActiva;
+    private String sesionActiva;
     private String rol;
 }
