@@ -93,7 +93,7 @@ public class RecepcionistaServlet extends HttpServlet {
         resp.setContentType("application/json");
         PrintWriter out = resp.getWriter();
         out.println(new Gson().toJson(object));
-        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.setStatus(HttpServletResponse.SC_CREATED);
     }
 
     private void sendError(HttpServletResponse resp, ExcepcionApi e) throws IOException {

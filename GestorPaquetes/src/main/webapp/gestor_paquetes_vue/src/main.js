@@ -27,6 +27,8 @@ import RecibirPaquete from "@/components/recepcionista/RecibirPaquete.vue";
 import RegistrarCliente from "@/components/recepcionista/RegistrarCliente.vue";
 import RegistrarPaqueteEntregado from "@/components/recepcionista/RegistrarPaqueteEntregado.vue";
 import PaginaOperador from "@/components/operador/PaginaOperador.vue";
+import GestionarRecepcionistas from "@/components/administrador/GestionarRecepcionistas.vue";
+import EditarRecepcionista from "@/components/administrador/EditarRecepcionista.vue";
 
 const routes = [
     {path: '/', component: IniciarSesion},
@@ -41,6 +43,8 @@ const routes = [
     {path: '/gestionar-clientes', component: GestionarCliente},
     {path: '/editar-cliente/:nitCliente', component: EditarCliente},
     {path: '/editar-operador/:idOperador', component: EditarOperador},
+    {path: '/gestionar-recepcionistas', component: GestionarRecepcionistas},
+    {path: '/editar-recepcionista/:idRecepcionista', component: EditarRecepcionista},
     //GESTIONES OPERADOR
     {path: '/operador', component: PaginaOperador},
     {path: '/cambiar-punto-control', component: CambiarPuntoControl},

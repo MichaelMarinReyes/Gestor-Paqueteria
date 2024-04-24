@@ -4,7 +4,7 @@
     <a href="/administrador">Usuarios</a>
     <a href="/gestionar-clientes">Clientes</a>
     <a href="/gestionar-operadores">Operadores</a>
-    <a href="#">Recepcionistas</a>
+    <a href="/gestionar-recepcionistas">Recepcionistas</a>
     <div class="dropdown">
       <button class="dropbtn">Reportes
         <i class="fa fa-caret-down"></i>
