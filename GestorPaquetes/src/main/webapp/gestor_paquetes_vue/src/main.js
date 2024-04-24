@@ -14,6 +14,7 @@ import CrearRuta from "@/components/administrador/CrearRuta.vue";
 import GestionarOperador from "@/components/administrador/GestionarOperador.vue";
 import GestionarCliente from "@/components/administrador/GestionarCliente.vue";
 import EditarCliente from "@/components/administrador/EditarCliente.vue"
+import EditarOperador from "@/components/administrador/EditarOperador.vue";
 
 //GESTIONES OPERADOR
 import CambiarPuntoControl from "@/components/operador/CambiarPuntoControl.vue";
@@ -39,6 +40,7 @@ const routes = [
     {path: '/gestionar-operadores', component: GestionarOperador},
     {path: '/gestionar-clientes', component: GestionarCliente},
     {path: '/editar-cliente/:nitCliente', component: EditarCliente},
+    {path: '/editar-operador/:idOperador', component: EditarOperador},
     //GESTIONES OPERADOR
     {path: '/operador', component: PaginaOperador},
     {path: '/cambiar-punto-control', component: CambiarPuntoControl},

@@ -82,7 +82,7 @@ export default {
       }
     },
     async editarOperador(operador) {
-      alert(`Editar operador: ${operador.nombre} ${operador.apellido}`);
+      this.$router.push({path: '/editar-operador/' + operador.idOperador});
     },
     async deshabilitarOperador(operador) {
       alert(`Deshabilitar operador: ${operador.nombre} ${operador.apellido}`);

@@ -4,25 +4,29 @@
 
     <form @submit.prevent="actualizarOperador" method="put" id="editarUsuarioForm">
       <label for="nit">NIT:</label>
-      <input type="text" id="nit" name="nit" v-model="cliente.nit" required>
+      <input type="text" id="nit" name="nit" v-model="operador.idOperador" required>
 
       <label for="nombre">Nombre:</label>
-      <input type="text" id="nombre" name="nombre" v-model="cliente.nombre" required>
+      <input type="text" id="nombre" name="nombre" v-model="operador.nombre" required>
 
       <label for="apellido">Apellido:</label>
-      <input type="text" id="apellido" name="apellido" v-model="cliente.apellido" required>
+      <input type="text" id="apellido" name="apellido" v-model="operador.apellido" required>
 
       <label for="contraseña">Contraseña:</label>
       <div class="password-input">
-        <input :type="showPassword ? 'text' : 'password'" id="contraseña" name="contraseña" v-model="cliente.contraseña" required/>
+        <input :type="showPassword ? 'text' : 'password'" id="contraseña" name="contraseña"
+               v-model="operador.contraseña" required/>
         <i class="fas fa-eye" @click="toggleShowPassword"></i>
       </div>
 
+      <label for="rol">ID Punto de control:</label>
+      <input type="text" id="rol" name="rol" v-model="operador.idPuntoControl">
+
       <label for="rol">Rol:</label>
-      <input type="text" id="rol" name="rol" v-model="cliente.rol" required disabled>
+      <input type="text" id="rol" name="rol" v-model="operador.rol" required disabled>
 
       <label for="estadoCuenta">Estado de Cuenta:</label>
-      <select id="estadoCuenta" name="estadoCuenta" v-model="cliente.estadoCuenta" required>
+      <select id="estadoCuenta" name="estadoCuenta" v-model="operador.sesionActiva" required>
         <option value="Activa">Activa</option>
         <option value="Desactivada">Desactivada</option>
       </select>
@@ -41,42 +45,43 @@ export default {
   name: 'EditarCliente',
   data() {
     return {
-      cliente: {
-        nit: '',
+      operador: {
+        idOperador: '',
         nombre: '',
         apellido: '',
         contraseña: '',
-        rol: '',
-        estadoCuenta: ''
+        idPuntoControl: '',
+        sesionActiva: '',
+        rol: ''
       },
       showPassword: false
     };
   },
   async mounted() {
     try {
-      const clienteId = this.$route.params.nitCliente;
-      const response = await axios.get(`http://localhost:8090/gestionar-clientes?nit=${clienteId}`);
-      this.cliente = response.data;
+      const idOperador = this.$route.params.idOperador;
+      const response = await axios.get(`http://localhost:8090/gestionar-operadores?idOperador=${idOperador}`);
+      this.operador = response.data;
     } catch (error) {
-      console.log('Error al obtener datos del cliente', error);
-      alert('Error al obtener datos del cliente. Por favor, intenta nuevamente.');
+      console.log('Error al obtener datos del operador', error);
+      alert('Error al obtener datos del operador. Por favor, intenta nuevamente.');
     }
   },
   methods: {
     async actualizarOperador() {
       try {
-        const response = await axios.put(`http://localhost:8090/actualizar-cliente?nit=${this.cliente.nit}`, this.cliente);
+        const response = await axios.put(`http://localhost:8090/gestionar-operadores?idOperador=${this.operador.idOperador}`, this.operador);
         if (response.status === 200) {
-          alert('Usuario actualizado correctamente');
+          alert('Operador actualizado correctamente');
           this.regresar();
         }
       } catch (error) {
-        console.error('Error al actualizar datos del usuario:', error);
-        alert('Error al actualizar datos del usuario. Por favor, intenta nuevamente.');
+        console.log('Error al actualizar datos de operador: ', error);
+        alert('Error al actualizar datos del operador. Por favor, intenta nuevamente.');
       }
     },
     async regresar() {
-      this.$router.push('/gestionar-clientes');
+      this.$router.push('/gestionar-operadores');
     },
     async toggleShowPassword() {
       this.showPassword = !this.showPassword;
