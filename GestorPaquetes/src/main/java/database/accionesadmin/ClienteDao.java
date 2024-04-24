@@ -90,10 +90,7 @@ public class ClienteDao {
             preparedStatement.setString(5, cliente.getRol());
             preparedStatement.setString(6, cliente.getEstadoCuenta());
             preparedStatement.setString(7, nitBuscado);
-            int rowsAffected = preparedStatement.executeUpdate();
-            if (rowsAffected == 0) {
-                throw new SQLException("La actualización del cliente no afectó ninguna fila en la base de datos.");
-            }
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error en dao" + e.getMessage());
         }

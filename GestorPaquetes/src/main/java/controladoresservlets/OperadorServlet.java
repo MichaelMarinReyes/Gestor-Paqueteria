@@ -45,11 +45,11 @@ public class OperadorServlet extends HttpServlet {
             Gson gson = new Gson();
             Operador operador = gson.fromJson(req.getReader(), Operador.class);
             this.sendResponse(resp, servicioAdministrador.crearOperador(operador));
+            sendJsonResponse(resp, HttpServletResponse.SC_CREATED, operador);
+        } catch (ExcepcionApi e) {
+            sendError(resp, e.getCode(), e.getMensaje());
         } catch (Exception e) {
-            this.sendError(resp, ExcepcionApi.builder()
-                    .code(HttpServletResponse.SC_INTERNAL_SERVER_ERROR)
-                    .mensaje(e.getMessage())
-                    .build());
+            sendError(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error interno del servidor");
         }
     }
 
@@ -105,5 +105,17 @@ public class OperadorServlet extends HttpServlet {
     private void sendError(HttpServletResponse resp, ExcepcionApi e) throws IOException {
         resp.setContentType("application/json");
         resp.sendError(e.getCode(), e.getMessage());
+    }
+
+    private void sendJsonResponse(HttpServletResponse resp, int statusCode, Object data) throws IOException {
+        resp.setStatus(statusCode);
+        resp.setContentType("application/json");
+        resp.getWriter().println(new Gson().toJson(data));
+    }
+
+    private void sendError(HttpServletResponse resp, int statusCode, String message) throws IOException {
+        resp.setStatus(statusCode);
+        resp.setContentType("application/json");
+        resp.getWriter().println("{\"error\": \"" + message + "\"}");
     }
 }

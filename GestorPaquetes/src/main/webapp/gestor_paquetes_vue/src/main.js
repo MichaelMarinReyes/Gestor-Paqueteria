@@ -38,7 +38,7 @@ const routes = [
     {path: '/crear-ruta', component: CrearRuta},
     {path: '/gestionar-operadores', component: GestionarOperador},
     {path: '/gestionar-clientes', component: GestionarCliente},
-    {path: '/editar-cliente', component: EditarCliente},
+    {path: '/editar-cliente/:nitCliente', component: EditarCliente},
     //GESTIONES OPERADOR
     {path: '/operador', component: PaginaOperador},
     {path: '/cambiar-punto-control', component: CambiarPuntoControl},

@@ -39,6 +39,7 @@
         </tr>
         </tbody>
       </table>
+      <button @click="regresar" class="btn boton-regresar">Regresar</button>
     </div>
   </div>
 </template>
@@ -87,10 +88,19 @@ export default {
       alert(`Deshabilitar operador: ${operador.nombre} ${operador.apellido}`);
     },
     async eliminarOperador(operador) {
-      console.log('Eliminar operador:', operador);
+      try {
+        await axios.delete(`http://localhost:8090/gestionar-operadores?idOperador=${operador.idOperador}`);
+        alert('Se eliminó con éxito el operador con el ID');
+        window.location.reload();
+      } catch (error) {
+        alert('Error al eliminar cliente', operador.idOperador);
+      }
     },
     async crearNuevoOperador() {
       this.$router.push('/crear-operador');
+    },
+    async regresar() {
+      this.$router.push('/administrador');
     }
   }
 };
@@ -147,5 +157,24 @@ i {
   cursor: pointer;
   margin-right: 5px;
   color: #007bff;
+}
+
+button {
+  width: 10%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  margin: 10px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.boton-regresar {
+  margin-top: 10px;
 }
 </style>

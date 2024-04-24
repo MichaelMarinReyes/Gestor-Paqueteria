@@ -1,8 +1,8 @@
 <template>
   <div class="login-container">
-    <h2>Editar Usuario</h2>
+    <h2>Editar Operador</h2>
 
-    <form @submit.prevent="actualizarCliente" method="put" id="editarUsuarioForm">
+    <form @submit.prevent="actualizarOperador" method="put" id="editarUsuarioForm">
       <label for="nit">NIT:</label>
       <input type="text" id="nit" name="nit" v-model="cliente.nit" required>
 
@@ -63,9 +63,9 @@ export default {
     }
   },
   methods: {
-    async actualizarCliente() {
+    async actualizarOperador() {
       try {
-        const response = await axios.put(`http://localhost:8090/gestionar-clientes?nit=${this.cliente.nit}`, this.cliente);
+        const response = await axios.put(`http://localhost:8090/actualizar-cliente?nit=${this.cliente.nit}`, this.cliente);
         if (response.status === 200) {
           alert('Usuario actualizado correctamente');
           this.regresar();

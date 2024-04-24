@@ -28,7 +28,7 @@
           <td>{{ cliente.nit }}</td>
           <td>{{ cliente.nombre }}</td>
           <td>{{ cliente.apellido }}</td>
-          <td>{{cliente.rol}}</td>
+          <td>{{ cliente.rol }}</td>
           <td>{{ cliente.estadoCuenta }}</td>
           <td>
             <!-- Icono de editar -->
@@ -41,6 +41,7 @@
         </tr>
         </tbody>
       </table>
+      <button @click="regresar" class="btn boton-regresar">Regresar</button>
     </div>
   </div>
 </template>
@@ -84,7 +85,7 @@ export default {
       }
     },
     async editarCliente(cliente) {
-      this.$router.push({ name: 'EditarCliente', params: { clienteId: cliente.nit } });
+      this.$router.push({path: '/editar-cliente/' + cliente.nit});
     },
     async deshabilitarCliente(cliente) {
       alert(`Deshabilitar cliente: ${cliente.nombre} ${cliente.apellido}`);
@@ -101,6 +102,9 @@ export default {
     },
     async crearNuevoCliente() {
       this.$router.push('/crear-cliente');
+    },
+    async regresar() {
+      this.$router.push('/administrador');
     }
   }
 };
@@ -157,5 +161,24 @@ i {
   cursor: pointer;
   margin-right: 5px;
   color: #007bff;
+}
+
+button {
+  width: 10%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  margin: 10px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.boton-regresar {
+  margin-top: 10px;
 }
 </style>

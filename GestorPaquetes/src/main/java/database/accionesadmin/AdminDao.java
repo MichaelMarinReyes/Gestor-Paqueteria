@@ -75,7 +75,7 @@ public class AdminDao {
         }
     }
 
-    public void eliminar(String nit) {
+    public void eliminar(String nit) throws SQLException {
         Connection connection = ConexionDB.getInstancia().conectar();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("delete from usuario where nit ='" + nit + "'");
