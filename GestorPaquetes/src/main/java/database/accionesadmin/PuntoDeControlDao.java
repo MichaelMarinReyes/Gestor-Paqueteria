@@ -139,4 +139,32 @@ public class PuntoDeControlDao {
             throw new RuntimeException(e);
         }
     }
+
+    public List<PuntoDeControl> obtenerPuntoControlDeOperador(int idOperador) {
+        List<PuntoDeControl> puntoControl = new ArrayList<>();
+        String query = "select * from punto_de_control where id_operador = ?;";
+        try {
+            Connection connection = ConexionDB.getInstancia().conectar();
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, idOperador);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    PuntoDeControl puntoDeControl = new PuntoDeControl();
+                    puntoDeControl.setIdPuntoControl(resultSet.getInt("id_punto_control"));
+                    puntoDeControl.setNombre(resultSet.getString("nombre"));
+                    puntoDeControl.setIdOperador(resultSet.getInt("id_operador"));
+                    puntoDeControl.setPaquetesEnCola(resultSet.getInt("paquetes_en_cola"));
+                    puntoDeControl.setTarifaOperacion(resultSet.getDouble("tarifa_operacion"));
+                    puntoDeControl.setMaximaEnCola(resultSet.getInt("maxima_en_cola"));
+                    puntoDeControl.setEstado(resultSet.getString("estado"));
+                    puntoControl.add(puntoDeControl);
+                }
+                return puntoControl;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

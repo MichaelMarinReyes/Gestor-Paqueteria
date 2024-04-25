@@ -58,7 +58,7 @@ export default {
           if (this.rol === 'admin') {
             this.$router.push('/administrador');
           } else if(this.rol === 'operador') {
-            this.$router.push('/operador');
+            this.$router.push({path: '/operador/' + this.usuario});
           } else if(this.rol === 'recepcionista') {
             this.$router.push('/recepcionista');
           }

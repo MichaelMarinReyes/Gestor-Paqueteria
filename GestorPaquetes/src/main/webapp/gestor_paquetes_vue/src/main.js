@@ -46,9 +46,9 @@ const routes = [
     {path: '/gestionar-recepcionistas', component: GestionarRecepcionistas},
     {path: '/editar-recepcionista/:idRecepcionista', component: EditarRecepcionista},
     //GESTIONES OPERADOR
-    {path: '/operador', component: PaginaOperador},
+    {path: '/operador/:idOperador', component: PaginaOperador},
     {path: '/cambiar-punto-control', component: CambiarPuntoControl},
-    {path: '/procesar-paquete', component: ProcesarPaquete},
+    {path: '/procesar-paquete/:idOperador', component: ProcesarPaquete},
     //GESTIONES RECEPCIONISTA
     {path: '/localizar-paquete', component: LocalizarPaqute},
     {path: '/recepcionista', component: PaginaRecepcionista},

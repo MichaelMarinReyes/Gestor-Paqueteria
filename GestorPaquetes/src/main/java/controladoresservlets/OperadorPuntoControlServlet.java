@@ -1,56 +1,39 @@
 package controladoresservlets;
 
-import clases.puntosdecontrorutaydestino.Destino;
+import clases.puntosdecontrorutaydestino.PuntoDeControl;
 import com.google.gson.Gson;
-import database.accionesoperador.DestinoDao;
-import servicios.ServiciosOperador;
+import database.accionesadmin.PuntoDeControlDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import servicios.ServiciosOperador;
 import util.ExcepcionApi;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "destinos", urlPatterns = "/destinos/*")
-public class DestinoServlet extends HttpServlet {
-    private ServiciosOperador servicioOperador = new ServiciosOperador();
-    private DestinoDao destinoDao = new DestinoDao();
+@WebServlet(name = "obtener-puntos-de-control", urlPatterns = "/puntos-de-control-asignados/*")
+public class OperadorPuntoControlServlet extends HttpServlet {
+    private PuntoDeControlDao puntoDeControlDao = new PuntoDeControlDao();
+    private ServiciosOperador serviciosOperador = new ServiciosOperador();
     private Gson gson = new Gson();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String idParametro = req.getParameter("idDestino");
+        String idParametro = req.getParameter("idOperador");
         if (idParametro != null && !idParametro.isEmpty()) {
-            Destino destino = destinoDao.obtenerDestino(Integer.parseInt(idParametro));
-            if (destino != null) {
-                resp.setContentType("application/json");
-                resp.setCharacterEncoding("UTF-8");
-                resp.getWriter().write(gson.toJson(destino));
-            } else {
-                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            try {
+                this.sendResponse(resp, serviciosOperador.obtenerPuntosDeControl(Integer.parseInt(idParametro)));
+            } catch (ExcepcionApi e) {
+                throw new RuntimeException(e);
             }
         } else {
-            this.sendResponse(resp, servicioOperador.obtenerDestinos());
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
-    }
-
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPut(req, resp);
-    }
-
-    @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doDelete(req, resp);
-    }
 
     private void sendResponse(HttpServletResponse resp, Object object) throws IOException {
         resp.setContentType("application/json");

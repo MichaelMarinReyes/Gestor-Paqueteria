@@ -8,7 +8,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DestinoDao {
+public class DestinoPaqueteDao {
 
     public List<Paquete> obtenerPaquetesEntregados(){
         List<Paquete> puntosDeControl = new ArrayList<>();

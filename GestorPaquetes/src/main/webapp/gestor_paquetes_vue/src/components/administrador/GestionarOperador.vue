@@ -18,6 +18,7 @@
           <th>Id</th>
           <th>Nombre</th>
           <th>Apellido</th>
+          <th>Contraseña</th>
           <th>Rol</th>
           <th>Acciones</th>
         </tr>
@@ -27,6 +28,7 @@
           <td>{{ operador.idOperador }}</td>
           <td>{{ operador.nombre }}</td>
           <td>{{ operador.apellido }}</td>
+          <td>{{ operador.contraseña }}</td>
           <td>{{ operador.rol }}</td>
           <td>
             <!-- Icono de editar -->
@@ -67,6 +69,7 @@ export default {
             operador.idOperador.toString().includes(filterText) ||
             operador.nombre.toUpperCase().includes(filterText) ||
             operador.apellido.toUpperCase().includes(filterText) ||
+            operador.contraseña.toUpperCase().includes(filterText) ||
             operador.rol.toUpperCase().includes(filterText)
         );
       });

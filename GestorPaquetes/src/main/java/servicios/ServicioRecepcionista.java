@@ -2,11 +2,9 @@ package servicios;
 
 import clases.puntosdecontrorutaydestino.Paquete;
 import clases.puntosdecontrorutaydestino.PuntoDeControl;
-import clases.roles.Cliente;
 import database.accionesadmin.ClienteDao;
 import database.accionesadmin.PuntoDeControlDao;
-import database.accionesrecepcionista.BodegaDao;
-import database.accionesrecepcionista.DestinoDao;
+import database.accionesrecepcionista.DestinoPaqueteDao;
 import database.accionesrecepcionista.LocalizarPaqueteDao;
 import jakarta.servlet.http.HttpServletResponse;
 import util.ExcepcionApi;
@@ -15,7 +13,7 @@ import java.util.List;
 public class ServicioRecepcionista {
     private LocalizarPaqueteDao localizarPaqueteDao = new LocalizarPaqueteDao();
     private ClienteDao clienteDao = new ClienteDao();
-    private DestinoDao destinoDao = new DestinoDao();
+    private DestinoPaqueteDao destinoPaqueteDao = new DestinoPaqueteDao();
 
     public List<Paquete> obtenerPaquetes() {
         return localizarPaqueteDao.obtenerPaquetes();
@@ -75,6 +73,6 @@ public class ServicioRecepcionista {
 
     //LISTADO DE PAQUETES EN EL DESTINO
     public List<Paquete> obtenerPaquetesEntregados() {
-        return destinoDao.obtenerPaquetesEntregados();
+        return destinoPaqueteDao.obtenerPaquetesEntregados();
     }
 }

@@ -1,6 +1,5 @@
 package controladoresservlets;
 
-import clases.roles.Cliente;
 import clases.roles.Operador;
 import com.google.gson.Gson;
 import database.accionesadmin.OperadorDao;
@@ -11,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import servicios.ServicioAdministrador;
 import util.ExcepcionApi;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;

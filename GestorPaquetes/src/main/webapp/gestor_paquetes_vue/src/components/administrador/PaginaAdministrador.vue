@@ -96,8 +96,8 @@ export default {
   name: 'PaginaAdministrador',
   data() {
     return {
-      operadores: [],
       clientes: [],
+      operadores: [],
       recepcionistas: []
     };
   },
