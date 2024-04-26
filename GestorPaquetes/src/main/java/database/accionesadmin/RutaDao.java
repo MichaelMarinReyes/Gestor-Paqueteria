@@ -1,6 +1,5 @@
 package database.accionesadmin;
 
-import clases.puntosdecontrorutaydestino.PuntoDeControl;
 import clases.puntosdecontrorutaydestino.Ruta;
 import database.ConexionDB;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,9 +14,9 @@ public class RutaDao {
     public List<Ruta> obtenerRutas() {
         List<Ruta> rutas = new ArrayList<>();
         String query = "select * from ruta";
-        try (Connection connection = ConexionDB.getInstancia().conectar();
-             PreparedStatement preparedStatement = connection.prepareStatement(query);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+        try {
+            Statement statement = ConexionDB.getInstancia().conectar().createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
                 Ruta ruta = new Ruta();
                 ruta.setIdRuta(resultSet.getInt("id_ruta"));
@@ -25,10 +24,10 @@ public class RutaDao {
                 ruta.setIdDestino(resultSet.getInt("id_destino"));
                 rutas.add(ruta);
             }
+            return rutas;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return rutas;
     }
 
     public Ruta obtenerRuta(int id) {

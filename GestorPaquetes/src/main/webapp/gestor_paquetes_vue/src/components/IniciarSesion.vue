@@ -7,9 +7,12 @@
         <label for="usuario">Usuario:</label>
         <input type="text" id="usuario" v-model="usuario" required>
       </div>
-      <div class="grupo-formulario">
-        <label for="contraseña">Contraseña:</label>
-        <input type="password" id="contraseña" v-model="contraseña" required>
+
+      <label for="contraseña">Contraseña:</label>
+      <div class="password-input">
+        <input :type="showPassword ? 'text' : 'password'" id="contraseña" name="contraseña"
+               v-model="contraseña" required/>
+        <i class="fas fa-eye" @click="toggleShowPassword"></i>
       </div>
       <div class="grupo-formulario">
         <label for="rol-usuario">Rol de usuario:</label>
@@ -37,7 +40,9 @@ export default {
       contraseña: '',
       rol: 'admin',
       sesionValida: false,
-      sesionInvalida: false
+      sesionInvalida: false,
+      showPassword: false
+
     };
   },
   methods: {
@@ -68,6 +73,9 @@ export default {
       } catch (error) {
         this.sesionInvalida = true;
       }
+    },
+    async toggleShowPassword() {
+      this.showPassword = !this.showPassword;
     }
   }
 };
@@ -94,10 +102,22 @@ label {
 
 input[type="text"],
 input[type="password"] {
-  width: 100%;
+  width: 90%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+
+.password-input {
+  position: relative;
+}
+
+.password-input i {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  cursor: pointer;
 }
 
 button {

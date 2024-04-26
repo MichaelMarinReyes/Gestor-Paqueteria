@@ -4,27 +4,63 @@
 
     <form action="#" method="post" id="crearPuntoControlForm">
       <div class="form-group">
-        <label for="idOperador">ID Operador:</label>
+        <label for="idOperador">ID Punto de Control:</label>
         <input type="text" id="idOperador" name="idOperador" required>
       </div>
 
       <div class="form-group">
-        <label for="idPaquete">ID Paquete:</label>
-        <input type="text" id="idPaquete" name="idPaquete" required>
+        <label for="idOperador">Nombre:</label>
+        <input type="text" id="idOperador" name="idOperador" required>
+      </div>
+
+      <div class="form-group">
+        <label for="idOperador">ID Operador:</label>
+        <input type="text" id="idOperador" name="idOperador">
+      </div>
+
+      <div class="form-group">
+        <label for="destino">Destino:</label>
+        <select id="destino" name="destinos[]" required>
+          <option value="" disabled>Seleccione un Destino</option>
+          <option v-for="destino in destinos" :key="destino.nombre" :value="destino.nombre">{{ destino.nombre }}</option>
+        </select>
       </div>
 
       <div class="form-group">
         <label for="tarifaOperacion">Tarifa de Operación:</label>
-        <input type="number" id="tarifaOperacion" name="tarifaOperacion" required>
+        <input type="text" id="tarifaOperacion" name="tarifaOperacion" value="Q. ">
       </div>
 
       <button type="submit">Crear Punto de Control</button>
     </form>
+    <button @click="regresar" class="boton-regresar">Regresar</button>
+
   </div>
 </template>
 
-<script setup>
+<script>
+import axios from "axios";
 
+export default {
+  name: "CrearPuntoDeControl",
+  data() {
+    return {
+      destinos: []
+    };
+  },
+  mounted() {
+    this.llenarDestinos();
+  },
+  methods: {
+    async llenarDestinos() {
+      const resp = await axios.get('http://localhost:8090/destinos');
+      this.destinos = resp.data;
+    },
+    async regresar() {
+      this.$router.push('/gestionar-puntos-de-control');
+    }
+  }
+};
 </script>
 
 <style scoped>
@@ -62,10 +98,19 @@ button {
   background-color: #007bff;
   color: #fff;
   cursor: pointer;
+  margin-top: 10px;
 }
 
 button:hover {
   background-color: #0056b3;
+}
+
+.boton-regresar {
+  margin-top: 10px;
+}
+
+.crear-recepcionista {
+  margin-top: 10px;
 }
 
 .error-msg {

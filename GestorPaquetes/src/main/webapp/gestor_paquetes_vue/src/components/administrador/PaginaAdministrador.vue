@@ -5,16 +5,17 @@
     <a href="/gestionar-clientes">Clientes</a>
     <a href="/gestionar-operadores">Operadores</a>
     <a href="/gestionar-recepcionistas">Recepcionistas</a>
+    <a href="/gestionar-rutas">Rutas</a>
+    <a href="/gestionar-puntos-de-control">Puntos de control</a>
     <div class="dropdown">
       <button class="dropbtn">Reportes
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
-        <a href="#">Reporte de usuarios</a>
-        <a href="#">Reporte de rutas</a>
-        <a href="#">Reporte de clientes</a>
-        <a href="#">Reporte de operadores</a>
-        <a href="#">Reporte de recepcionistas</a>
+        <a href="/reporte-de-rutas">Reporte de rutas</a>
+        <a href="/reporte-clientes">Reporte de clientes</a>
+        <a href="/reporte-operadores">Reporte de operadores</a>
+        <a href="/reporte-recepcionistas">Reporte de recepcionistas</a>
       </div>
     </div>
     <a href="../">Cerrar sesión</a>
@@ -60,7 +61,7 @@
           <td>{{ operador.nombre }}</td>
           <td>{{ operador.apellido }}</td>
           <td>{{ operador.rol }}</td>
-          <td>{{operador.sesionActiva}}</td>
+          <td>{{ operador.sesionActiva }}</td>
         </tr>
         </tbody>
       </table>
@@ -78,10 +79,10 @@
         <tbody>
         <tr v-for="recepcionista in recepcionistas" :key="recepcionista.idRecepcionista">
           <td>{{ recepcionista.idRecepcionista }}</td>
-          <td>{{recepcionista.nombre}}</td>
-          <td>{{recepcionista.apellido}}</td>
-          <td>{{recepcionista.rol}}</td>
-          <td>{{recepcionista.sesionActiva}}</td>
+          <td>{{ recepcionista.nombre }}</td>
+          <td>{{ recepcionista.apellido }}</td>
+          <td>{{ recepcionista.rol }}</td>
+          <td>{{ recepcionista.sesionActiva }}</td>
         </tr>
         </tbody>
       </table>

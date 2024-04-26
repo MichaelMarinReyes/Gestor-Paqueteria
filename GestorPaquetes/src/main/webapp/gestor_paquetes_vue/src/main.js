@@ -15,11 +15,17 @@ import GestionarOperador from "@/components/administrador/GestionarOperador.vue"
 import GestionarCliente from "@/components/administrador/GestionarCliente.vue";
 import EditarCliente from "@/components/administrador/EditarCliente.vue"
 import EditarOperador from "@/components/administrador/EditarOperador.vue";
+import GestionarRuta from "@/components/administrador/GestionarRuta.vue";
+import GestionarPuntoDeControl from "@/components/administrador/GestionarPuntoDeControl.vue";
+import ReporteCliente from "@/components/administrador/reportes/ReporteCliente.vue";
+import ReporteOperadores from "@/components/administrador/reportes/ReporteOperadores.vue";
+import ReporteRecepcionista from "@/components/administrador/reportes/ReporteRecepcionista.vue";
+import ReporteRuta from "@/components/administrador/reportes/ReporteRuta.vue";
 
 //GESTIONES OPERADOR
 import CambiarPuntoControl from "@/components/operador/CambiarPuntoControl.vue";
-import ProcesarPaquete from "@/components/operador/ProcesarPaquete.vue";
 
+import ProcesarPaquete from "@/components/operador/ProcesarPaquete.vue";
 //GESTIONES RECEPCIONSISTA
 import LocalizarPaqute from "@/components/recepcionista/LocalizarPaquete.vue";
 import PaginaRecepcionista from "@/components/recepcionista/PaginaRecepcionista.vue";
@@ -45,6 +51,12 @@ const routes = [
     {path: '/editar-operador/:idOperador', component: EditarOperador},
     {path: '/gestionar-recepcionistas', component: GestionarRecepcionistas},
     {path: '/editar-recepcionista/:idRecepcionista', component: EditarRecepcionista},
+    {path: '/gestionar-rutas', component: GestionarRuta},
+    {path: '/gestionar-puntos-de-control', component: GestionarPuntoDeControl},
+    {path: '/reporte-clientes', component: ReporteCliente},
+    {path: '/reporte-operadores', component: ReporteOperadores},
+    {path: '/reporte-recepcionistas', component: ReporteRecepcionista},
+    {path: '/reporte-de-rutas', component: ReporteRuta},
     //GESTIONES OPERADOR
     {path: '/operador/:idOperador', component: PaginaOperador},
     {path: '/cambiar-punto-control', component: CambiarPuntoControl},

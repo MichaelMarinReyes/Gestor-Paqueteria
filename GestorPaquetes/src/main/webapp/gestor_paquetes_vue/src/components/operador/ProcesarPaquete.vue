@@ -112,7 +112,7 @@ label {
 
 input[type="text"],
 input[type="datetime-local"] {
-  width: calc(100% - 22px); /* Resta 22px para dar espacio al padding y border */
+  width: calc(100% - 22px);
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
