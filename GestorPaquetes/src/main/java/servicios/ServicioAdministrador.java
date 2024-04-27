@@ -17,6 +17,7 @@ public class ServicioAdministrador {
     private ClienteDao clienteDao = new ClienteDao();
     private OperadorDao operadorDao = new OperadorDao();
     private RecepcionistaDao recepcionistaDao = new RecepcionistaDao();
+    private RutaPuntoControlDao rutaPuntoControlDao = new RutaPuntoControlDao();
 
     //CRUD PARA PUNTOS DE CONTROL
     public List<PuntoDeControl> obtenerPuntosDeControl() {
@@ -234,5 +235,10 @@ public class ServicioAdministrador {
         if (recepcionista != null) {
             recepcionistaDao.eliminarRecepcionista(idRecepcionista);
         }
+    }
+
+    //CONTROL DE PUNTOS DE CONTROL CON RUTAS
+    public List<RutaPuntoControl> obtenerPuntosDeControlDeRuta(int idRuta) {
+        return rutaPuntoControlDao.obtenerPuntosControlRuta(idRuta);
     }
 }

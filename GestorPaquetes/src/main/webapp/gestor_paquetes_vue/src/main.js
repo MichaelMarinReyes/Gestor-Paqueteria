@@ -22,6 +22,7 @@ import ReporteOperadores from "@/components/administrador/reportes/ReporteOperad
 import ReporteRecepcionista from "@/components/administrador/reportes/ReporteRecepcionista.vue";
 import ReporteRuta from "@/components/administrador/reportes/ReporteRuta.vue";
 import EditarPuntoControl from "@/components/administrador/EditarPuntoControl.vue";
+import PuntosDeControlDeRutas from "@/components/administrador/PuntosDeControlDeRutas.vue";
 
 //GESTIONES OPERADOR
 import CambiarPuntoControl from "@/components/operador/CambiarPuntoControl.vue";
@@ -58,6 +59,7 @@ const routes = [
     {path: '/reporte-recepcionistas', component: ReporteRecepcionista},
     {path: '/reporte-de-rutas', component: ReporteRuta},
     {path: '/editar-punto-de-control/:idPuntoControl', component: EditarPuntoControl},
+    {path: '/puntos-de-control-de-ruta/:idRuta', component: PuntosDeControlDeRutas},
     //GESTIONES OPERADOR
     {path: '/operador/:idOperador', component: PaginaOperador},
     {path: '/cambiar-punto-control', component: CambiarPuntoControl},

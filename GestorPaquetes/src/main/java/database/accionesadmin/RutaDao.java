@@ -24,10 +24,10 @@ public class RutaDao {
                 ruta.setIdDestino(resultSet.getInt("id_destino"));
                 rutas.add(ruta);
             }
-            return rutas;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return rutas;
     }
 
     public Ruta obtenerRuta(int id) {

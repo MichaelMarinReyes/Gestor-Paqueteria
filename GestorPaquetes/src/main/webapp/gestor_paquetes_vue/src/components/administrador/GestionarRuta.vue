@@ -27,11 +27,9 @@
           <td>{{ ruta.nombreRuta }}</td>
           <td>{{ ruta.idDestino }}</td>
           <td>
-            <!-- Icono de editar -->
             <i class="fas fa-edit" @click="editarRuta(ruta)"></i>
-            <!-- Icono de deshabilitar -->
+            <i class="fas fa-info-circle" @click="verPuntosControl(ruta)"></i>
             <i class="fas fa-ban" @click="deshabilitarRuta(ruta)"></i>
-            <!-- Icono de eliminar -->
             <i class="fas fa-trash-alt" @click="eliminarRuta(ruta)"></i>
           </td>
         </tr>
@@ -80,6 +78,9 @@ export default {
     },
     async editarRuta(ruta) {
       this.$router.push({path: '/editar-ruta/' + ruta.idRuta});
+    },
+    async verPuntosControl(ruta) {
+      this.$router.push({path: '/puntos-de-control-de-ruta/' + ruta.idRuta});
     },
     async deshabilitarRuta(ruta) {
       alert(`Deshabilitar ruta: ${ruta.nombre}`);
