@@ -25,8 +25,8 @@
       <label for="rol">Rol:</label>
       <input type="text" id="rol" name="rol" v-model="operador.rol" required disabled>
 
-      <label for="estadoCuenta">Estado de Cuenta:</label>
-      <select id="estadoCuenta" name="estadoCuenta" v-model="operador.sesionActiva" required>
+      <label for="sesionActiva">Estado de Cuenta:</label>
+      <select id="sesionActiva" name="sesionActiva" v-model="operador.sesionActiva" required>
         <option value="Activa">Activa</option>
         <option value="Desactivada">Desactivada</option>
       </select>
@@ -72,6 +72,7 @@ export default {
       try {
         const response = await axios.put(`http://localhost:8090/gestionar-operadores?idOperador=${this.operador.idOperador}`, this.operador);
         if (response.status === 200) {
+          console.log(this.operador.sesionActiva);
           alert('Operador actualizado correctamente');
           this.regresar();
         }

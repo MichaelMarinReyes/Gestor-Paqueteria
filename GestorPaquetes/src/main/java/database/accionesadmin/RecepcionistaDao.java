@@ -49,10 +49,10 @@ public class RecepcionistaDao {
                 recepcionista.setRol(resultSet.getString("rol"));
                 recepcionistas.add(recepcionista);
             }
-            return recepcionistas;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return recepcionistas;
     }
 
     public Recepcionista obtenerRecepcionista(int id) {

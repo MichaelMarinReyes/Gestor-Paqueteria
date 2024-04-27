@@ -166,7 +166,7 @@ public class ServicioAdministrador {
                 operador.setApellido(operadorEntidad.getApellido());
                 operador.setContraseña(operadorEntidad.getContraseña());
                 operador.setIdPuntoControl(operadorEntidad.getIdPuntoControl());
-                operador.setSesionActiva(operador.getSesionActiva());
+                operador.setSesionActiva(operadorEntidad.getSesionActiva());
                 operador.setRol(operadorEntidad.getRol());
                 operadorDao.actualizarOperador(operador, idOperador);
             } else {

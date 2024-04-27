@@ -128,8 +128,8 @@ public class PuntoDeControlDao {
 
     public void eliminarPuntoControl(int id) {
         String query = "delete from punto_de_control where id_punto_control = ?;";
-        try (Connection connection = ConexionDB.getInstancia().conectar();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try {
+            PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement(query);
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {

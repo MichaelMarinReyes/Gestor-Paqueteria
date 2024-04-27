@@ -52,11 +52,10 @@ public class OperadorDao {
                 operador.setRol(resultSet.getString("rol"));
                 operadores.add(operador);
             }
-            return operadores;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return null;
+        return operadores;
     }
 
     public Operador obtenerOperador(int id) {
@@ -82,23 +81,19 @@ public class OperadorDao {
         }
     }
 
-    public void actualizarOperador(Operador operador, int idOperador) {
+    public void actualizarOperador(Operador operadorEntidad, int idOperador) {
         String query = "update operador set id_operador = ?, nombre = ?, apellido = ?, contraseña = ?, id_punto_control = ?, sesion_activa = ?, rol = ? where id_operador = ?;";
         try (Connection connection = ConexionDB.getInstancia().conectar();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, operador.getIdOperador());
-            preparedStatement.setString(2, operador.getNombre());
-            preparedStatement.setString(3, operador.getApellido());
-            preparedStatement.setString(4, operador.getContraseña());
-            preparedStatement.setInt(5, operador.getIdPuntoControl());
-            preparedStatement.setString(6, operador.getSesionActiva());
-            preparedStatement.setString(7, operador.getRol());
+            preparedStatement.setInt(1, operadorEntidad.getIdOperador());
+            preparedStatement.setString(2, operadorEntidad.getNombre());
+            preparedStatement.setString(3, operadorEntidad.getApellido());
+            preparedStatement.setString(4, operadorEntidad.getContraseña());
+            preparedStatement.setInt(5, operadorEntidad.getIdPuntoControl());
+            preparedStatement.setString(6, operadorEntidad.getSesionActiva());
+            preparedStatement.setString(7, operadorEntidad.getRol());
             preparedStatement.setInt(8, idOperador);
-
-            int rowsUpdated = preparedStatement.executeUpdate();
-            if (rowsUpdated == 0) {
-                throw new SQLException("La actualización del operador no afectó ninguna fila");
-            }
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
