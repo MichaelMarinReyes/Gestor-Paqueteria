@@ -10,6 +10,7 @@ import java.util.List;
 public class DestinoDao {
     public List<Destino> obtenerDestinos() {
         List<Destino> destinos = new ArrayList<>();
+
         try {
             Statement statement = ConexionDB.getInstancia().conectar().createStatement();
             ResultSet resultSet = statement.executeQuery("select * from destino");

@@ -36,11 +36,11 @@
           <td>{{ puntoDeControl.estado }}</td>
           <td>
             <!-- Icono de editar -->
-            <i class="fas fa-edit" @click="editarRuta(puntoDeControl)"></i>
+            <i class="fas fa-edit" @click="editarPuntoControl(puntoDeControl)"></i>
             <!-- Icono de deshabilitar -->
-            <i class="fas fa-ban" @click="deshabilitarRuta(puntoDeControl)"></i>
+            <i class="fas fa-ban" @click="deshabilitarPuntoControl(puntoDeControl)"></i>
             <!-- Icono de eliminar -->
-            <i class="fas fa-trash-alt" @click="eliminarRuta(puntoDeControl)"></i>
+            <i class="fas fa-trash-alt" @click="eliminarPuntoControl(puntoDeControl)"></i>
           </td>
         </tr>
         </tbody>
@@ -90,19 +90,19 @@ export default {
         console.error('Error al obtener puntos de control:', error);
       }
     },
-    async editarRuta(puntoDeControl) {
-      this.$router.push({path: '/editar-ruta/' + puntoDeControl.idPuntoControl});
+    async editarPuntoControl(puntoDeControl) {
+      this.$router.push({path: '/editar-punto-de-control/' + puntoDeControl.idPuntoControl});
     },
-    async deshabilitarRuta(puntoDeControl) {
+    async deshabilitarPuntoControl(puntoDeControl) {
       alert(`Deshabilitar punto de control: ${puntoDeControl.nombre}`);
     },
-    async eliminarRuta(puntoDeControl) {
+    async eliminarPuntoControl(puntoDeControl) {
       try {
         await axios.delete(`http://localhost:8090/gestionar-puntos-de-control?idPuntoControl=${puntoDeControl.idPuntoControl}`);
         window.location.reload();
         alert('Se eliminó con éxito el punto de control con el ID');
       } catch (error) {
-        alert('Error al eliminar ruta', puntoDeControl.idPuntoControl);
+        alert('Error al eliminar punto de control', puntoDeControl.idPuntoControl);
       }
     },
     async crearPuntoControl() {

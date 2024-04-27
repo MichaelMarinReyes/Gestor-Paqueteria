@@ -28,7 +28,6 @@ public class ServicioAdministrador {
         if (puntoDeControlEntidad == null) {
             throw ExcepcionApi.builder().code(HttpServletResponse.SC_BAD_REQUEST).mensaje("No se proporcionó punto de control").build();
         }
-
         if (puntoDeControlDao.obtenerPuntoControl(idPUuntoControl) != null) {
             throw ExcepcionApi.builder().code(HttpServletResponse.SC_CONFLICT).mensaje("El punto de control ya está registrado").build();
         }

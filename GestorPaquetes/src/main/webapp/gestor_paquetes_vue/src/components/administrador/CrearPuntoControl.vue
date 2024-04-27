@@ -2,35 +2,49 @@
   <div class="login-container">
     <h2>Crear Nuevo Punto de Control</h2>
 
-    <form action="#" method="post" id="crearPuntoControlForm">
+    <form @submit.prevent="crearPuntoControl" method="post" id="crearPuntoControlForm">
       <div class="form-group">
         <label for="idOperador">ID Punto de Control:</label>
-        <input type="text" id="idOperador" name="idOperador" required>
+        <input type="text" id="idOperador" name="idOperador" v-model="idPuntoControl" required>
       </div>
 
       <div class="form-group">
         <label for="idOperador">Nombre:</label>
-        <input type="text" id="idOperador" name="idOperador" required>
+        <input type="text" id="idOperador" name="idOperador" v-model="nombre" required>
       </div>
 
       <div class="form-group">
         <label for="idOperador">ID Operador:</label>
-        <input type="text" id="idOperador" name="idOperador">
+        <input type="text" id="idOperador" name="idOperador" v-model="idOperador">
+      </div>
+
+
+      <div class="form-group">
+        <label for="cola">Paquetes en cola:</label>
+        <input type="number" id="cola" name="cola" v-model="paquetesEnCola" required>
+      </div>
+
+      <div class="form-group">
+        <label for="colaMaxima">Máximo en cola:</label>
+        <input type="number" id="colaMaxima" name="colaMaxima" v-model="maximaEnCola" required>
+      </div>
+
+
+      <div class="form-group">
+        <label for="tarifaOperacion">Tarifa de Operación:</label>
+        <input type="text" id="tarifaOperacion" name="tarifaOperacion" v-model="tarifaOperacion" value="Q. " required>
       </div>
 
       <div class="form-group">
         <label for="destino">Destino:</label>
         <select id="destino" name="destinos[]" required>
           <option value="" disabled>Seleccione un Destino</option>
-          <option v-for="destino in destinos" :key="destino.nombre" :value="destino.nombre">{{ destino.nombre }}</option>
+          <option v-for="destino in destinos" :key="destino.nombre" :value="destino.nombre">{{
+              destino.nombre
+            }}
+          </option>
         </select>
       </div>
-
-      <div class="form-group">
-        <label for="tarifaOperacion">Tarifa de Operación:</label>
-        <input type="text" id="tarifaOperacion" name="tarifaOperacion" value="Q. ">
-      </div>
-
       <button type="submit">Crear Punto de Control</button>
     </form>
     <button @click="regresar" class="boton-regresar">Regresar</button>
@@ -45,7 +59,14 @@ export default {
   name: "CrearPuntoDeControl",
   data() {
     return {
-      destinos: []
+      destinos: [],
+      idPuntoControl: '',
+      nombre: '',
+      idOperador: '',
+      paquetesEnCola: '',
+      tarifaOperacion: '',
+      estado: 'Activo',
+      maximaEnCola: ''
     };
   },
   mounted() {
@@ -53,8 +74,51 @@ export default {
   },
   methods: {
     async llenarDestinos() {
-      const resp = await axios.get('http://localhost:8090/destinos');
-      this.destinos = resp.data;
+      const response = await axios.get('http://localhost:8090/destinos');
+      this.destinos = response.data;
+    },
+    async crearPuntoControl() {
+      if (!this.idPuntoControl || !this.nombre || !this.paquetesEnCola || !this.maximaEnCola || !this.tarifaOperacion) {
+        alert('Por favor completa todos los campos obligatorios.');
+        return;
+      }
+
+      const idOperador = this.idOperador ? this.idOperador : 0;
+
+      try {
+        const datosPuntoControl = {
+          idPuntoControl: this.idPuntoControl,
+          nombre: this.nombre,
+          idOperador: idOperador,
+          paquetesEnCola: this.paquetesEnCola,
+          tarifaOperacion: this.tarifaOperacion,
+          estado: this.estado,
+          maximaEnCola: this.maximaEnCola
+        };
+
+        console.log('Datos a enviar ', datosPuntoControl);
+
+        const response = await axios.post('http://localhost:8090/gestionar-puntos-de-control', datosPuntoControl);
+        console.log(response.status)
+        if (response.status === 200) {
+          alert('Punto de control creado correctamente');
+          this.limpiarCampos()
+        } else if (response.status === 409) {
+          alert('Ya existe un punto de control con ese ID: ' + this.idPuntoControl);
+        }
+      } catch (error) {
+        console.log('Error al crear punto de control', error);
+        alert('Error al crear punto de control. Por favor, intenta nuevamente.')
+      }
+    },
+    async limpiarCampos() {
+      this.idPuntoControl = '';
+      this.nombre = '';
+      this.idOperador = '';
+      this.paquetesEnCola = '';
+      this.maximaEnCola = '';
+      this.tarifaOperacion = '';
+
     },
     async regresar() {
       this.$router.push('/gestionar-puntos-de-control');

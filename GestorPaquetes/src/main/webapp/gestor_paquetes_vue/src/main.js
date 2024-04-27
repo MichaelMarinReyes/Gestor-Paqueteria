@@ -21,10 +21,10 @@ import ReporteCliente from "@/components/administrador/reportes/ReporteCliente.v
 import ReporteOperadores from "@/components/administrador/reportes/ReporteOperadores.vue";
 import ReporteRecepcionista from "@/components/administrador/reportes/ReporteRecepcionista.vue";
 import ReporteRuta from "@/components/administrador/reportes/ReporteRuta.vue";
+import EditarPuntoControl from "@/components/administrador/EditarPuntoControl.vue";
 
 //GESTIONES OPERADOR
 import CambiarPuntoControl from "@/components/operador/CambiarPuntoControl.vue";
-
 import ProcesarPaquete from "@/components/operador/ProcesarPaquete.vue";
 //GESTIONES RECEPCIONSISTA
 import LocalizarPaqute from "@/components/recepcionista/LocalizarPaquete.vue";
@@ -57,6 +57,7 @@ const routes = [
     {path: '/reporte-operadores', component: ReporteOperadores},
     {path: '/reporte-recepcionistas', component: ReporteRecepcionista},
     {path: '/reporte-de-rutas', component: ReporteRuta},
+    {path: '/editar-punto-de-control/:idPuntoControl', component: EditarPuntoControl},
     //GESTIONES OPERADOR
     {path: '/operador/:idOperador', component: PaginaOperador},
     {path: '/cambiar-punto-control', component: CambiarPuntoControl},
