@@ -44,10 +44,11 @@ public class RutaDao {
                 ruta.setIdDestino(resultSet.getInt("id_destino"));
                 return ruta;
             }
-            return null;
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
+        return ruta;
     }
 
     public Ruta crearRuta(Ruta rutaEntidad) throws ExcepcionApi {
@@ -90,8 +91,8 @@ public class RutaDao {
 
     public void eliminarRuta(int id) {
         String query = "delete from ruta where id_ruta = ?;";
-        try (Connection connection = ConexionDB.getInstancia().conectar();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try {
+            PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement(query);
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {

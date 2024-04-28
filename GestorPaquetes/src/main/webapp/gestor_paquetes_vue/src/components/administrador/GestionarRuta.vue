@@ -17,7 +17,7 @@
         <tr>
           <th>ID Ruta</th>
           <th>Nombre</th>
-          <th>Destino</th>
+          <th>ID Destino</th>
           <th>Acciones</th>
         </tr>
         </thead>
@@ -49,7 +49,13 @@ export default {
   data() {
     return {
       rutas: [],
-      searchText: ''
+      searchText: '',
+      destino: {
+        idDestino: '',
+        nombre: '',
+        cuotaDestino: '',
+        paquetesenDestino: ''
+      },
     };
   },
   mounted() {
@@ -72,6 +78,7 @@ export default {
       try {
         const response = await axios.get('http://localhost:8090/gestionar-rutas');
         this.rutas = response.data;
+        this.obtenerNombreDestino();
       } catch (error) {
         console.error('Error al obtener rutas:', error);
       }

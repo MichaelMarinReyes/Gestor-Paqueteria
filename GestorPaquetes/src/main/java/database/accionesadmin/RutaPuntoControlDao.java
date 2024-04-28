@@ -52,4 +52,67 @@ public class RutaPuntoControlDao {
         }
         return puntosControl;
     }
+
+    public RutaPuntoControl obtenerPuntoControlRuta(int idRuta, int idPuntoControl) {
+        String query = "select * from ruta_punto_de_control from id_ruta where id_ruta = ? and id_punto_control = ?;)";
+        RutaPuntoControl rutaPuntoControl = new RutaPuntoControl();
+        Connection connection = ConexionDB.getInstancia().conectar();
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, idRuta);
+            preparedStatement.setInt(2, idPuntoControl);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                rutaPuntoControl.setIdRuta(resultSet.getInt("id_ruta"));
+                rutaPuntoControl.setIdPuntoControl(resultSet.getInt("id_punto_control"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return rutaPuntoControl;
+    }
+
+    public RutaPuntoControl añadirPuntoControl(RutaPuntoControl rutaPuntoControl) {
+        String query = "insert into ruta_punto_de_control (id_ruta, id_punto_de_control) values (?,?);)";
+        Connection connection = ConexionDB.getInstancia().conectar();
+        PreparedStatement preparedStatement = null;
+
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, rutaPuntoControl.getIdRuta());
+            preparedStatement.setInt(2, rutaPuntoControl.getIdPuntoControl());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return rutaPuntoControl;
+    }
 }

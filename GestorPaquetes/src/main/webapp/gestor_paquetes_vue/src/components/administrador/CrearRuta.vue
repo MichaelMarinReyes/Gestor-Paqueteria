@@ -2,30 +2,25 @@
   <div class="login-container">
     <h2>Crear Nueva Ruta</h2>
 
-    <form @submit.prevent="crearDestino" method="post" id="crearRecepcionistaForm">
+    <form @submit.prevent="crearRuta" method="post" id="crearRecepcionistaForm">
       <div class="form-group">
         <label for="idRuta">ID de Ruta:</label>
-        <input type="text" id="idRuta" name="idRuta" required>
+        <input type="text" id="idRuta" name="idRuta" v-model="idRuta" required>
       </div>
 
       <div class="form-group">
         <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre" required>
-      </div>
-
-      <div class="form-group">
-        <label for="puntosControl">Puntos de Control:</label>
-        <select id="puntosControl" name="puntosControl[]" multiple required>
-          <option value="" disabled>Seleccione uno o más puntos de control</option>
-          <option v-for="puntoDeControl in puntosDeControl" :key="puntoDeControl.nombre" :value="puntoDeControl.nombre">{{ puntoDeControl.nombre }}</option>
-        </select>
+        <input type="text" id="nombre" name="nombre" v-model="nombreRuta" required>
       </div>
 
       <div class="form-group">
         <label for="destino">Destino:</label>
-        <select id="destino" name="destinos[]"  required>
+        <select id="destino" name="destinos[]" v-model="idDestino" required>
           <option value="" disabled>Seleccione un Destino</option>
-          <option v-for="destino in destinos" :key="destino.nombre" :value="destino.nombre">{{ destino.nombre }}</option>
+          <option v-for="destino in destinos" :key="destino.idDestino" :value="destino.idDestino">{{
+              destino.nombre
+            }}
+          </option>
         </select>
       </div>
 
@@ -42,26 +37,57 @@ export default {
   name: 'CrearRuta',
   data() {
     return {
-      puntosDeControl: [],
-      destinos: []
+      destinos: [],
+      idRuta: '',
+      nombreRuta: '',
+      idDestino: '',
     };
   },
   mounted() {
     this.llenarPuntosDeContol()
   },
   methods: {
-    async llenarPuntosDeContol(){
+    async llenarPuntosDeContol() {
       try {
-        const response = await axios.get('http://localhost:8090/gestionar-puntos-de-control');
-        this.puntosDeControl = response.data;
         const resp = await axios.get('http://localhost:8090/destinos');
         this.destinos = resp.data;
       } catch (error) {
         console.log('Error al cargar puntos de control');
       }
     },
-    async crearDestino(){
-      alert('creando destino');
+    async crearRuta() {
+      const datosRuta = {
+        idRuta: parseInt(this.idRuta),
+        nombreRuta: this.nombreRuta,
+        idDestino: this.idDestino
+      };
+
+      try {
+        const response = await axios.post('http://localhost:8090/gestionar-rutas', datosRuta);
+
+        if (response.status === 200) {
+          alert('Ruta creada correctamente');
+          this.resetearFormulario();
+        } else if (response.status === 409) {
+          alert('La ruta ya existe con ese ID');
+        }
+      } catch (error) {
+        if (error.response) {
+          if (error.response.status === 409) {
+            alert('La ruta ya existe con ese ID');
+          } else if (error.response.status === 500) {
+            alert('Error interno del servidor');
+          } else {
+            alert('Error desconocido: ' + error.response.status);
+          }
+        } else {
+          console.error('Error:', error.message);
+        }
+      }
+    },
+    async resetearFormulario() {
+      this.idRuta = '';
+      this.nombreRuta = '';
     },
     regresar() {
       this.$router.push('/gestionar-rutas');

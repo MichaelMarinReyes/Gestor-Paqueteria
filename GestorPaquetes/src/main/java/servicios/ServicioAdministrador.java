@@ -74,6 +74,10 @@ public class ServicioAdministrador {
         if (rutaEntidad == null) {
             throw ExcepcionApi.builder().code(HttpServletResponse.SC_NOT_FOUND).mensaje("No se creó la ruta\n Datos faltantes").build();
         }
+        Ruta rutaExistente = rutaDao.obtenerRuta(rutaEntidad.getIdRuta());
+        if (rutaExistente != null && rutaEntidad.getIdRuta() == rutaExistente.getIdRuta()) {
+            throw ExcepcionApi.builder().code(HttpServletResponse.SC_CONFLICT).mensaje("El ruta ya existe con ese ID").build();
+        }
         return rutaDao.crearRuta(rutaEntidad);
     }
 
@@ -240,5 +244,15 @@ public class ServicioAdministrador {
     //CONTROL DE PUNTOS DE CONTROL CON RUTAS
     public List<RutaPuntoControl> obtenerPuntosDeControlDeRuta(int idRuta) {
         return rutaPuntoControlDao.obtenerPuntosControlRuta(idRuta);
+    }
+
+    public RutaPuntoControl añadirPuntoControARuta(RutaPuntoControl rutaPuntoControl) throws ExcepcionApi {
+        if (rutaPuntoControl == null) {
+            throw ExcepcionApi.builder().code(HttpServletResponse.SC_BAD_REQUEST).mensaje("No se proporcionó punto de control o ruta").build();
+        }
+        if (rutaPuntoControlDao.obtenerPuntoControlRuta(rutaPuntoControl.getIdRuta(), rutaPuntoControl.getIdPuntoControl()) != null) {
+            throw ExcepcionApi.builder().code(HttpServletResponse.SC_CONFLICT).mensaje("El punto de control ya está asignado a la ruta").build();
+        }
+        return rutaPuntoControlDao.añadirPuntoControl(rutaPuntoControl);
     }
 }

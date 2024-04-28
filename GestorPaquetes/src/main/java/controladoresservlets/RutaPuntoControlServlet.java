@@ -18,7 +18,6 @@ import java.io.PrintWriter;
 @WebServlet(name = "ruta-puntos-de-control", urlPatterns = "/rutas-y-puntos-de-control")
 public class RutaPuntoControlServlet extends HttpServlet {
     private ServicioAdministrador servicioAdministrador = new ServicioAdministrador();
-    private Gson gson = new Gson();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -31,7 +30,16 @@ public class RutaPuntoControlServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+        try {
+            Gson gson = new Gson();
+            RutaPuntoControl rutaPuntoControl = gson.fromJson(req.getReader(), RutaPuntoControl.class);
+            this.sendResponse(resp, servicioAdministrador.añadirPuntoControARuta(rutaPuntoControl));
+        } catch (Exception e) {
+            this.sendError(resp, ExcepcionApi.builder()
+                    .code(HttpServletResponse.SC_INTERNAL_SERVER_ERROR)
+                    .mensaje(e.getMessage())
+                    .build());
+        }
     }
 
     @Override

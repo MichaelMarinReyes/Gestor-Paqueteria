@@ -107,7 +107,7 @@ export default {
       //this.$router.push('/crear-ruta');
     },
     async regresar() {
-      this.$router.push('/gestionar_rutas');
+      this.$router.push('/gestionar-rutas');
     }
   }
 };
