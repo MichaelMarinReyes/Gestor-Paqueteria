@@ -78,7 +78,6 @@ export default {
       try {
         const response = await axios.get('http://localhost:8090/gestionar-rutas');
         this.rutas = response.data;
-        this.obtenerNombreDestino();
       } catch (error) {
         console.error('Error al obtener rutas:', error);
       }

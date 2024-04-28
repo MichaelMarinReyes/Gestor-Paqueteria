@@ -61,7 +61,7 @@ public class RutaServlet extends HttpServlet {
             BufferedReader reader = req.getReader();
             Ruta ruta = gson.fromJson(reader, Ruta.class);
             ruta.setIdRuta(idRuta);
-            servicioAdministrador.editarRuta(ruta);
+            servicioAdministrador.editarRuta(ruta, idRuta);
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception e) {
             this.sendError(resp, ExcepcionApi.builder()

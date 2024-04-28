@@ -71,19 +71,15 @@ public class RutaDao {
         return rutaEntidad;
     }
 
-    public void actualizarRuta(Ruta rutaEntidad) {
+    public void actualizarRuta(Ruta rutaEntidad, int idRuta) {
         String query = "update ruta set id_ruta= ?, nombre_ruta = ?, id_destino = ? where id_ruta = ?;";
         try (Connection connection = ConexionDB.getInstancia().conectar();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, rutaEntidad.getIdRuta());
             preparedStatement.setString(2, rutaEntidad.getNombreRuta());
             preparedStatement.setInt(3, rutaEntidad.getIdDestino());
-            preparedStatement.setInt(4, rutaEntidad.getIdRuta());
-            int rowsAffected = preparedStatement.executeUpdate();
-
-            if (rowsAffected == 0) {
-                throw new SQLException("La actualización del punto de control no afectó ninguna fila en la base de datos.");
-            }
+            preparedStatement.setInt(4, idRuta);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

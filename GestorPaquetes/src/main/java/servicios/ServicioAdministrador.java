@@ -85,13 +85,13 @@ public class ServicioAdministrador {
         return rutaDao.obtenerRutas();
     }
 
-    public void editarRuta(Ruta rutaEntidad) {
+    public void editarRuta(Ruta rutaEntidad, int idRuta) {
         Ruta ruta = rutaDao.obtenerRuta(rutaEntidad.getIdRuta());
         if (ruta != null) {
             ruta.setIdRuta(rutaEntidad.getIdRuta());
             ruta.setNombreRuta(rutaEntidad.getNombreRuta());
             ruta.setIdDestino(rutaEntidad.getIdDestino());
-            rutaDao.actualizarRuta(ruta);
+            rutaDao.actualizarRuta(ruta, idRuta);
         }
     }
 
