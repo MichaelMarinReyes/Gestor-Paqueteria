@@ -11,7 +11,7 @@
             title="Búsqueda Rápida"
             class="form-control"
         />
-        <button @click="agregarPuntoControl" class="btn btn-primary">Añadir Punto de Control</button>
+        <button @click="agregarPuntoControl (ruta)" class="btn btn-primary">Añadir Punto de Control</button>
       </div>
       <table>
         <thead>
@@ -20,7 +20,6 @@
           <th>Nombre de Ruta</th>
           <th>ID Punto de Control</th>
           <th>Nombre de Punto de Control</th>
-          <th>Acciones</th>
         </tr>
         </thead>
         <tbody>
@@ -29,10 +28,6 @@
           <td>{{ rutaPuntoControl.nombreRuta }}</td>
           <td>{{ rutaPuntoControl.idPuntoControl }}</td>
           <td>{{ rutaPuntoControl.nombrePuntoControl }}</td>
-          <td>
-            <i class="fas fa-info-circle" @click="verPuntosControl"></i>
-            <i class="fas fa-ban" @click="deshabilitarPuntoControl(ruta)"></i>
-          </td>
         </tr>
         </tbody>
       </table>
@@ -96,15 +91,9 @@ export default {
         console.error('Error al obtener rutas:', error);
       }
     },
-    async verPuntosControl() {
-      alert('Mostrar los puntos respecto a la ruta');
-    },
-    async deshabilitarPuntoControl(ruta) {
-      alert(`Deshabilitar ruta: ${ruta.nombre}`);
-    },
-    async agregarPuntoControl() {
-      alert('Agregar punto de control');
-      //this.$router.push('/crear-ruta');
+    async agregarPuntoControl(ruta) {
+      //alert('Agregar punto de control');
+      this.$router.push({path: '/agregar-punto-de-control/' + ruta.idRuta} );
     },
     async regresar() {
       this.$router.push('/gestionar-rutas');

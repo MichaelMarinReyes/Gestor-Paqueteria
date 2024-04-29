@@ -1,6 +1,6 @@
 package controladoresservlets;
 
-import clases.puntosdecontrorutaydestino.RutaPuntoControl;
+import clases.reportes.ReporteCliente;
 import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,31 +13,21 @@ import util.ExcepcionApi;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "ruta-puntos-de-control", urlPatterns = "/rutas-y-puntos-de-control")
-public class RutaPuntoControlServlet extends HttpServlet {
+@WebServlet(name = "reporte-clientes", urlPatterns = "/reporte-clientes/*")
+public class ReporteClienteServlet extends HttpServlet {
     private ServicioAdministrador servicioAdministrador = new ServicioAdministrador();
+    Gson gson = new Gson();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String idParametro = req.getParameter("idRuta");
-        if (idParametro != null && !idParametro.isEmpty()) {
-            int idRuta = Integer.parseInt(idParametro);
-            this.sendResponse(resp, servicioAdministrador.obtenerPuntosDeControlDeRuta(idRuta));
-        }
+
+            this.sendResponse(resp, servicioAdministrador.obtenerReporteClientes());
+
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            Gson gson = new Gson();
-            RutaPuntoControl rutaPuntoControl = gson.fromJson(req.getReader(), RutaPuntoControl.class);
-            this.sendResponse(resp, servicioAdministrador.añadirPuntoControARuta(rutaPuntoControl));
-        } catch (Exception e) {
-            this.sendError(resp, ExcepcionApi.builder()
-                    .code(HttpServletResponse.SC_INTERNAL_SERVER_ERROR)
-                    .mensaje(e.getMessage())
-                    .build());
-        }
+        super.doPost(req, resp);
     }
 
     @Override
@@ -49,6 +39,7 @@ public class RutaPuntoControlServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doDelete(req, resp);
     }
+
 
     private void sendResponse(HttpServletResponse resp, Object object) throws IOException {
         resp.setContentType("application/json");

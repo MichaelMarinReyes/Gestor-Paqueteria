@@ -24,6 +24,7 @@ import ReporteRuta from "@/components/administrador/reportes/ReporteRuta.vue";
 import EditarPuntoControl from "@/components/administrador/EditarPuntoControl.vue";
 import PuntosDeControlDeRutas from "@/components/administrador/PuntosDeControlDeRutas.vue";
 import EditarRuta from "@/components/administrador/EditarRuta.vue";
+import AAdirPuntoARuta from "@/components/administrador/AñadirPuntoARuta.vue";
 
 //GESTIONES OPERADOR
 import CambiarPuntoControl from "@/components/operador/CambiarPuntoControl.vue";
@@ -62,6 +63,7 @@ const routes = [
     {path: '/editar-punto-de-control/:idPuntoControl', component: EditarPuntoControl},
     {path: '/puntos-de-control-de-ruta/:idRuta', component: PuntosDeControlDeRutas},
     {path: '/editar-ruta/:idRuta', component: EditarRuta},
+    {path: '/agregar-punto-de-control/:idRuta', component: AAdirPuntoARuta},
     //GESTIONES OPERADOR
     {path: '/operador/:idOperador', component: PaginaOperador},
     {path: '/cambiar-punto-control', component: CambiarPuntoControl},

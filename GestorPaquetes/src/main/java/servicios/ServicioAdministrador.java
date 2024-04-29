@@ -1,6 +1,7 @@
 package servicios;
 
 import clases.puntosdecontrorutaydestino.*;
+import clases.reportes.ReporteCliente;
 import clases.roles.Cliente;
 import clases.roles.Operador;
 import clases.roles.Recepcionista;
@@ -18,6 +19,7 @@ public class ServicioAdministrador {
     private OperadorDao operadorDao = new OperadorDao();
     private RecepcionistaDao recepcionistaDao = new RecepcionistaDao();
     private RutaPuntoControlDao rutaPuntoControlDao = new RutaPuntoControlDao();
+    private ReporteClienteDao reporteClienteDao = new ReporteClienteDao();
 
     //CRUD PARA PUNTOS DE CONTROL
     public List<PuntoDeControl> obtenerPuntosDeControl() {
@@ -250,9 +252,16 @@ public class ServicioAdministrador {
         if (rutaPuntoControl == null) {
             throw ExcepcionApi.builder().code(HttpServletResponse.SC_BAD_REQUEST).mensaje("No se proporcionó punto de control o ruta").build();
         }
-        if (rutaPuntoControlDao.obtenerPuntoControlRuta(rutaPuntoControl.getIdRuta(), rutaPuntoControl.getIdPuntoControl()) != null) {
+        int idRuta = rutaPuntoControl.getIdRuta();
+        int idPuntoControl = rutaPuntoControl.getIdPuntoControl();
+        if (rutaPuntoControlDao.obtenerPuntoControlRuta(idRuta, idPuntoControl) != null) {
             throw ExcepcionApi.builder().code(HttpServletResponse.SC_CONFLICT).mensaje("El punto de control ya está asignado a la ruta").build();
         }
         return rutaPuntoControlDao.añadirPuntoControl(rutaPuntoControl);
+    }
+
+    //REPORTE CLIENTES
+    public List<ReporteCliente> obtenerReporteClientes() {
+        return reporteClienteDao.obtenerReporteClientes();
     }
 }

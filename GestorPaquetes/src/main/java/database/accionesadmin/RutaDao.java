@@ -16,7 +16,7 @@ public class RutaDao {
         String query = "select * from ruta";
         try {
             PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement(query);
-            ResultSet resultSet = preparedStatement.executeQuery(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Ruta ruta = new Ruta();
                 ruta.setIdRuta(resultSet.getInt("id_ruta"));
@@ -25,7 +25,7 @@ public class RutaDao {
                 rutas.add(ruta);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e); //TRUENA AQUÍ
+            e.printStackTrace();
         }
         return rutas;
     }
@@ -34,9 +34,9 @@ public class RutaDao {
         Ruta ruta = null;
         String query = "select * from ruta where id_ruta = ?;";
         try {
-            PreparedStatement stmt = ConexionDB.getInstancia().conectar().prepareStatement(query);
-            stmt.setInt(1, id);
-            ResultSet resultSet = stmt.executeQuery();
+            PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement(query);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 ruta = new Ruta();
                 ruta.setIdRuta(resultSet.getInt("id_ruta"));
@@ -52,19 +52,17 @@ public class RutaDao {
     }
 
     public Ruta crearRuta(Ruta rutaEntidad) throws ExcepcionApi {
-        if (rutaEntidad == null) {
-            throw ExcepcionApi.builder().code(HttpServletResponse.SC_BAD_REQUEST).mensaje("La ruta proporcionada es nula").build();
-        }
         String query = "insert into ruta (nombre_ruta, id_destino) values (?, ?)";
         try {
-            PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            if (rutaEntidad == null) {
+                throw ExcepcionApi.builder().code(HttpServletResponse.SC_BAD_REQUEST).mensaje("La ruta proporcionada es nula").build();
+            }
+            PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement(query);
             preparedStatement.setString(1, rutaEntidad.getNombreRuta());
             preparedStatement.setInt(2, rutaEntidad.getIdDestino());
             preparedStatement.execute();
-            int rowsAffected = preparedStatement.executeUpdate();
-            if (rowsAffected == 0) {
-                throw new SQLException("No se pudo crear la ruta");
-            }
+            preparedStatement.executeUpdate();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

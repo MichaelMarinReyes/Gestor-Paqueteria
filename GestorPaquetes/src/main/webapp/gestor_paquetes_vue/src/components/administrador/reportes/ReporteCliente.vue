@@ -18,8 +18,6 @@
           <th>Nit</th>
           <th>Nombre</th>
           <th>Apellido</th>
-          <th>Rol</th>
-          <th>Estado de la cuenta</th>
           <th>Paquetes entregados</th>
           <th>Costos</th>
           <th>Ingresos</th>
@@ -31,9 +29,7 @@
           <td>{{ cliente.nit }}</td>
           <td>{{ cliente.nombre }}</td>
           <td>{{ cliente.apellido }}</td>
-          <td>{{ cliente.rol }}</td>
-          <td>{{ cliente.estadoCuenta }}</td>
-          <td>NULL</td>
+          <td>{{ cliente.paquetesEntregados }}</td>
           <td>NULL</td>
           <td>NULL</td>
           <td>NULL</td>
@@ -66,8 +62,7 @@ export default {
             cliente.nit.includes(filterText) ||
             cliente.nombre.toUpperCase().includes(filterText) ||
             cliente.apellido.toUpperCase().includes(filterText) ||
-            cliente.rol.toUpperCase().includes(filterText) ||
-            cliente.estadoCuenta.toUpperCase().includes(filterText)
+            cliente.paquetesEntregados.toUpperCase().includes(filterText)
         );
       });
     }
@@ -75,7 +70,7 @@ export default {
   methods: {
     async obtenerClientes() {
       try {
-        const response = await axios.get('http://localhost:8090/gestionar-clientes');
+        const response = await axios.get('http://localhost:8090/reporte-clientes');
         this.clientes = response.data;
       } catch (error) {
         console.error('Error al obtener clientes:', error);

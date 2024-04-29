@@ -58,9 +58,6 @@ export default {
     },
     async regresar() {
       this.$router.push('/gestionar-rutas');
-    },
-    async toggleShowPassword() {
-      this.showPassword = !this.showPassword;
     }
   }
 }
