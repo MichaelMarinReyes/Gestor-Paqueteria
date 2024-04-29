@@ -24,8 +24,6 @@ public class LocalizarPaqueteDao {
             preparedStatement.setInt(1, paqueteEntidad.getIdPaquete());
             preparedStatement.setString(2, paqueteEntidad.getNit());
             preparedStatement.setString(3, paqueteEntidad.getEstadoPaquete());
-            preparedStatement.setInt(4, paqueteEntidad.getIdDestino());
-            preparedStatement.setInt(5, paqueteEntidad.getIdPuntoControl());
             LocalTime horaEntrada = paqueteEntidad.getHoraEntrada();
 
             if (horaEntrada != null) {
@@ -46,7 +44,6 @@ public class LocalizarPaqueteDao {
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 paqueteEntidad.setIdPaquete(generatedKeys.getInt(1));
-                this.aumentarNumeroPaqueteEnCola(paqueteEntidad.getIdPuntoControl());
                 return paqueteEntidad;
             }
             return null;
@@ -65,8 +62,6 @@ public class LocalizarPaqueteDao {
                 paquete.setIdPaquete(resultSet.getInt("id_paquete"));
                 paquete.setNit(resultSet.getString("nit"));
                 paquete.setEstadoPaquete(resultSet.getString("estado_paquete"));
-                paquete.setIdDestino(resultSet.getInt("id_destino"));
-                paquete.setIdPuntoControl(resultSet.getInt("id_punto_control"));
 
                 Time horaEntradaSql = resultSet.getTime("hora_entrada");
                 if (horaEntradaSql != null) {
@@ -105,8 +100,6 @@ public class LocalizarPaqueteDao {
                     paquete.setIdPaquete(resultSet.getInt("id_paquete"));
                     paquete.setNit(resultSet.getString("nit"));
                     paquete.setEstadoPaquete(resultSet.getString("estado_paquete"));
-                    paquete.setIdDestino(resultSet.getInt("id_destino"));
-                    paquete.setIdPuntoControl(resultSet.getInt("id_punto_control"));
                     Time horaEntradaSql = resultSet.getTime("hora_entrada");
                     if (horaEntradaSql != null) {
                         LocalTime horaEntrada = horaEntradaSql.toLocalTime();
@@ -139,8 +132,6 @@ public class LocalizarPaqueteDao {
             preparedStatement.setInt(1, paquete.getIdPaquete());
             preparedStatement.setString(2, paquete.getNit());
             preparedStatement.setString(3, paquete.getEstadoPaquete());
-            preparedStatement.setInt(4, paquete.getIdDestino());
-            preparedStatement.setInt(5, paquete.getIdPuntoControl());
             LocalTime horaEntrada = paquete.getHoraEntrada();
             if (horaEntrada != null) {
                 Time horaEntradaSql = Time.valueOf(horaEntrada);
@@ -168,7 +159,7 @@ public class LocalizarPaqueteDao {
     }
 
     public void eliminarPaquete(int idPaquete) {
-        int idPuntoControl= this.obtenerPaquete(idPaquete).getIdPuntoControl();
+        int idPuntoControl= this.obtenerPaquete(idPaquete).getIdPaquete();
         try {
             PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement("delete from paquete where id_paquete = ?;");
             preparedStatement.setInt(1, idPaquete);

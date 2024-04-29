@@ -40,8 +40,8 @@ public class ClienteDao {
     public List<Cliente> obtenerClientes() {
         List<Cliente> clientes = new ArrayList<>();
         try {
-            Statement statement = ConexionDB.getInstancia().conectar().createStatement();
-            ResultSet resultSet = statement.executeQuery("select * from usuario;");
+            PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement("select * from usuario;");
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Cliente cliente = new Cliente();
                 cliente.setNit(resultSet.getString("nit"));
@@ -52,17 +52,18 @@ public class ClienteDao {
                 cliente.setEstadoCuenta(resultSet.getString("estado_cuenta"));
                 clientes.add(cliente);
             }
-            return clientes;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            //throw new RuntimeException(e);
+            e.printStackTrace();
         }
+        return clientes;
     }
 
     public Cliente obtenerCliente(String nit) {
         try {
-            PreparedStatement stmt = ConexionDB.getInstancia().conectar().prepareStatement("select * from usuario where nit = ?;");
-            stmt.setString(1, nit);
-            ResultSet resultSet = stmt.executeQuery();
+            PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement("select * from usuario where nit = ?;");
+            preparedStatement.setString(1, nit);
+            ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 Cliente cliente = new Cliente();
                 cliente.setNit(resultSet.getString("nit"));
@@ -81,8 +82,8 @@ public class ClienteDao {
 
     public void actualizarCliente(Cliente cliente, String nitBuscado) {
         String query = "update usuario set nit = ?, nombre = ?, apellido = ?, contraseña = ?, rol = ?, estado_cuenta = ? where nit = ?";
-        try (Connection connection = ConexionDB.getInstancia().conectar();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try {
+            PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement(query);
             preparedStatement.setString(1, cliente.getNit());
             preparedStatement.setString(2, cliente.getNombre());
             preparedStatement.setString(3, cliente.getApellido());
@@ -91,6 +92,7 @@ public class ClienteDao {
             preparedStatement.setString(6, cliente.getEstadoCuenta());
             preparedStatement.setString(7, nitBuscado);
             preparedStatement.executeUpdate();
+
         } catch (SQLException e) {
             System.out.println("Error en dao" + e.getMessage());
         }

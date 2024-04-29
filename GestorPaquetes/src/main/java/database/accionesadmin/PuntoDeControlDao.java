@@ -14,8 +14,7 @@ public class PuntoDeControlDao {
     public List<PuntoDeControl> obtenerPuntosDeControl() {
         List<PuntoDeControl> puntosDeControl = new ArrayList<>();
         try {
-            Connection connection = ConexionDB.getInstancia().conectar();
-            PreparedStatement preparedStatement = connection.prepareStatement("select * from punto_de_control");
+            PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement("select * from punto_de_control");
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 PuntoDeControl puntoDeControl = new PuntoDeControl();
@@ -30,10 +29,8 @@ public class PuntoDeControlDao {
             }
             return puntosDeControl;
         } catch (SQLException e) {
-            System.out.println("Error al obtener las puntos de control 33 - ");
             e.printStackTrace();
-            System.out.println(e.getMessage());
-           /// throw new RuntimeException(e.getMessage());
+            /// throw new RuntimeException(e.getMessage());
         }
         return puntosDeControl;
     }
@@ -42,8 +39,7 @@ public class PuntoDeControlDao {
         PuntoDeControl puntoControl = null;
         String query = "select * from punto_de_control where id_punto_control = ?;";
         try {
-                    Connection connection = ConexionDB.getInstancia().conectar();
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement(query);
             preparedStatement.setInt(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
@@ -68,13 +64,12 @@ public class PuntoDeControlDao {
     public PuntoDeControl crearPuntoControl(PuntoDeControl puntoControl) throws ExcepcionApi {
         String query = "insert into punto_de_control (nombre, id_operador, paquetes_en_cola, tarifa_operacion, maxima_en_cola, estado) values (?, ?, ?, ?, ?, ?)";
 
-        if (puntoControl == null) {
-            throw ExcepcionApi.builder().code(HttpServletResponse.SC_BAD_REQUEST).mensaje("El punto de control proporcionado es nulo").build();
-        }
+        try {
+            if (puntoControl == null) {
+                throw ExcepcionApi.builder().code(HttpServletResponse.SC_BAD_REQUEST).mensaje("El punto de control proporcionado es nulo").build();
+            }
 
-        try (Connection connection = ConexionDB.getInstancia().conectar();
-             PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-
+            PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement(query);
             preparedStatement.setString(1, puntoControl.getNombre());
 
             if (puntoControl.getIdOperador() == 0) {
@@ -89,7 +84,7 @@ public class PuntoDeControlDao {
             preparedStatement.setString(6, puntoControl.getEstado());
 
             boolean rowsAffected = preparedStatement.execute();
-            if (rowsAffected ) {
+            if (rowsAffected) {
                 throw new SQLException("No se pudo crear el punto de control");
             }
         } catch (SQLException e) {
@@ -99,12 +94,10 @@ public class PuntoDeControlDao {
     }
 
 
-
     public void actualizarPuntoControl(PuntoDeControl puntoControl) {
         String query = "update punto_de_control set nombre = ?, id_operador = ?, paquetes_en_cola = ?, tarifa_operacion = ?, maxima_en_cola = ?, estado = ? where id_punto_control = ?";
-        System.out.println(puntoControl);
-        try (Connection connection = ConexionDB.getInstancia().conectar();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try {
+            PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement(query);
             preparedStatement.setString(1, puntoControl.getNombre());
 
             if (puntoControl.getIdOperador() == 0) {

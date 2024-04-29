@@ -31,15 +31,12 @@ export default {
   },
   methods: {
     receivePackage() {
-      // Realiza una solicitud GET al servidor para obtener la información del cliente
       axios.get(`/client/${this.nit}`)
           .then(response => {
             if (response.data) {
-              // Cliente encontrado, muestra sus datos
               this.userInfo = response.data;
               this.receivedPackage = true;
             } else {
-              // Cliente no encontrado
               this.userInfo = null;
               this.receivedPackage = true;
             }
@@ -74,7 +71,7 @@ label {
 }
 
 input[type="text"] {
-  width: 100%;
+  width: 95%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;

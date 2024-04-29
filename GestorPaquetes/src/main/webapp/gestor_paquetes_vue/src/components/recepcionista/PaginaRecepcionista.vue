@@ -1,7 +1,7 @@
 <template>
   <div class="navbar">
     <a href="/recepcionista">Recepcionista</a>
-    <a href="/administrador">Recibir paquete</a>
+    <a href="/recibir-paquete">Recibir paquete</a>
     <a href="/#">Registrar cliente</a>
     <a href="/#">Registrar paquete entregado</a>
     <a href="/#">Localizar paquete</a>

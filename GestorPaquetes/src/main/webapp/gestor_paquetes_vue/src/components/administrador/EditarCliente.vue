@@ -41,6 +41,7 @@ export default {
   name: 'EditarCliente',
   data() {
     return {
+      clienteID: '',
       cliente: {
         nit: '',
         nombre: '',
@@ -54,8 +55,8 @@ export default {
   },
   async mounted() {
     try {
-      const clienteId = this.$route.params.nitCliente;
-      const response = await axios.get(`http://localhost:8090/gestionar-clientes?nit=${clienteId}`);
+      this.clienteID = this.$route.params.nitCliente;
+      const response = await axios.get(`http://localhost:8090/gestionar-clientes?nit=${this.clienteID}`);
       this.cliente = response.data;
     } catch (error) {
       console.log('Error al obtener datos del cliente', error);
@@ -65,7 +66,8 @@ export default {
   methods: {
     async actualizarCliente() {
       try {
-        const response = await axios.put(`http://localhost:8090/gestionar-clientes?nit=${this.cliente.nit}`, this.cliente);
+        const response = await axios.put(`http://localhost:8090/gestionar-clientes?nit=${this.clienteID}`, this.cliente);
+
         if (response.status === 200) {
           alert('Usuario actualizado correctamente');
           this.regresar();

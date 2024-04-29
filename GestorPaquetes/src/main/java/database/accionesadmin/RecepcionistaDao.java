@@ -36,8 +36,8 @@ public class RecepcionistaDao {
     public List<Recepcionista> obtenerRecepcionistas() {
         List<Recepcionista> recepcionistas = new ArrayList<>();
         try {
-            Statement statement = ConexionDB.getInstancia().conectar().createStatement();
-            ResultSet resultSet = statement.executeQuery("select * from recepcionista;");
+            PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement("select * from recepcionista;");
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Recepcionista recepcionista = new Recepcionista();
                 recepcionista.setIdRecepcionista(resultSet.getInt("id_recepcionista"));
@@ -50,7 +50,7 @@ public class RecepcionistaDao {
                 recepcionistas.add(recepcionista);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace(); //TRUENA AQUÍ
         }
         return recepcionistas;
     }
@@ -79,8 +79,8 @@ public class RecepcionistaDao {
 
     public void actualizarRecepcionista(Recepcionista recepcionista, int idRecepcionista) {
         String query = "update recepcionista set id_recepcionista = ?, id_paquete = ?, nombre = ?, apellido = ?, contraseña = ?, sesion_activa = ?, rol = ? where id_recepcionista = ?";
-        try (Connection connection = ConexionDB.getInstancia().conectar();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try {
+            PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement(query);
             preparedStatement.setInt(1, recepcionista.getIdRecepcionista());
             preparedStatement.setInt(2, recepcionista.getIdPaquete());
             preparedStatement.setString(3, recepcionista.getNombre());

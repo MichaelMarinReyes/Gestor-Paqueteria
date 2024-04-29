@@ -15,8 +15,8 @@ public class RutaDao {
         List<Ruta> rutas = new ArrayList<>();
         String query = "select * from ruta";
         try {
-            Statement statement = ConexionDB.getInstancia().conectar().createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+            PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery(query);
             while (resultSet.next()) {
                 Ruta ruta = new Ruta();
                 ruta.setIdRuta(resultSet.getInt("id_ruta"));
@@ -25,7 +25,7 @@ public class RutaDao {
                 rutas.add(ruta);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e); //TRUENA AQUÍ
         }
         return rutas;
     }
@@ -73,8 +73,8 @@ public class RutaDao {
 
     public void actualizarRuta(Ruta rutaEntidad, int idRuta) {
         String query = "update ruta set id_ruta= ?, nombre_ruta = ?, id_destino = ? where id_ruta = ?;";
-        try (Connection connection = ConexionDB.getInstancia().conectar();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try {
+            PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement(query);
             preparedStatement.setInt(1, rutaEntidad.getIdRuta());
             preparedStatement.setString(2, rutaEntidad.getNombreRuta());
             preparedStatement.setInt(3, rutaEntidad.getIdDestino());

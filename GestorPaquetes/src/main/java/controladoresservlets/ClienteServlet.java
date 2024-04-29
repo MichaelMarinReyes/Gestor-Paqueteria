@@ -72,7 +72,6 @@ public class ClienteServlet extends HttpServlet {
                         .build());
             }
         } catch (Exception e) {
-            System.out.println("Error");
             this.sendError(resp, ExcepcionApi.builder()
                     .code(HttpServletResponse.SC_BAD_REQUEST)
                     .mensaje("Error al procesar el JSON: " + e.getMessage())

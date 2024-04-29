@@ -19,6 +19,7 @@
           <th>Nombre</th>
           <th>Apellido</th>
           <th>Contraseña</th>
+          <th>ID Punto de control asignado</th>
           <th>Estado de cuenta</th>
           <th>Rol</th>
           <th>Acciones</th>
@@ -30,6 +31,7 @@
           <td>{{ operador.nombre }}</td>
           <td>{{ operador.apellido }}</td>
           <td>{{ operador.contraseña }}</td>
+          <td>{{ operador.idPuntoControl}}</td>
           <td>{{ operador.sesionActiva }}</td>
           <td>{{ operador.rol }}</td>
           <td>
@@ -72,6 +74,7 @@ export default {
             operador.nombre.toUpperCase().includes(filterText) ||
             operador.apellido.toUpperCase().includes(filterText) ||
             operador.contraseña.toUpperCase().includes(filterText) ||
+                operador.idPuntoControl.toString().includes(filterText) ||
             operador.sesionActiva.toUpperCase().includes(filterText) ||
             operador.rol.toUpperCase().includes(filterText)
         );

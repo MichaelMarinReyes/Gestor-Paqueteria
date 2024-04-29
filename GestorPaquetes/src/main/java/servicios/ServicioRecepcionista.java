@@ -34,7 +34,7 @@ public class ServicioRecepcionista {
         }
 
         PuntoDeControlDao puntoDeControlDao = new PuntoDeControlDao();
-        PuntoDeControl puntoDeControl = puntoDeControlDao.obtenerPuntoControl(paqueteEntidad.getIdPuntoControl());
+        PuntoDeControl puntoDeControl = puntoDeControlDao.obtenerPuntoControl(paqueteEntidad.getIdPaquete());
 
         if (puntoDeControl != null) {
             int paquetesEnCola = puntoDeControl.getPaquetesEnCola();
@@ -54,8 +54,6 @@ public class ServicioRecepcionista {
             paquete.setIdPaquete(paqueteEntidad.getIdPaquete());
             paquete.setNit(paqueteEntidad.getNit());
             paquete.setEstadoPaquete(paqueteEntidad.getEstadoPaquete());
-            paquete.setIdDestino(paqueteEntidad.getIdDestino());
-            paquete.setIdPuntoControl(paqueteEntidad.getIdPuntoControl());
             paquete.setHoraEntrada(paqueteEntidad.getHoraEntrada());
             paquete.setHoraSalida(paqueteEntidad.getHoraSalida());
             localizarPaqueteDao.actualizarPaquete(paquete, idPaquete);

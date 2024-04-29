@@ -28,7 +28,7 @@
         <option value="Desactivada">Desactivada</option>
       </select>
 
-      <button type="submit" class="actualizar-usuario">Actualizar Usuario</button>
+      <button type="submit" class="actualizar-usuario">Actualizar Recepcionista</button>
     </form>
 
     <button @click="regresar" class="boton-regresar">Regresar</button>

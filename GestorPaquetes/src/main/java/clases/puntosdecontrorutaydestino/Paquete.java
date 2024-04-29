@@ -14,8 +14,6 @@ public class Paquete {
     private int idPaquete;
     private String nit;
     private String estadoPaquete;
-    private int idDestino;
-    private int idPuntoControl;
     private LocalTime horaEntrada;
     private LocalTime horaSalida;
 }

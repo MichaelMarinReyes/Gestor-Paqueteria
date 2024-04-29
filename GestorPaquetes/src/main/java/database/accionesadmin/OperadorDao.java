@@ -38,8 +38,8 @@ public class OperadorDao {
     public List<Operador> obtenerOperadores() {
         List<Operador> operadores = new ArrayList<>();
         try {
-            Statement statement = ConexionDB.getInstancia().conectar().createStatement();
-            ResultSet resultSet = statement.executeQuery("select * from operador;");
+            PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement("select * from operador;");
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Operador operador = new Operador();
                 operador.setIdOperador(resultSet.getInt("id_operador"));
@@ -53,7 +53,7 @@ public class OperadorDao {
                 operadores.add(operador);
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace(); //AQUÍ TRUENA
         }
         return operadores;
     }
@@ -83,8 +83,8 @@ public class OperadorDao {
 
     public void actualizarOperador(Operador operadorEntidad, int idOperador) {
         String query = "update operador set id_operador = ?, nombre = ?, apellido = ?, contraseña = ?, id_punto_control = ?, sesion_activa = ?, rol = ? where id_operador = ?;";
-        try (Connection connection = ConexionDB.getInstancia().conectar();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try  {
+            PreparedStatement preparedStatement = ConexionDB.getInstancia().conectar().prepareStatement(query);
             preparedStatement.setInt(1, operadorEntidad.getIdOperador());
             preparedStatement.setString(2, operadorEntidad.getNombre());
             preparedStatement.setString(3, operadorEntidad.getApellido());
