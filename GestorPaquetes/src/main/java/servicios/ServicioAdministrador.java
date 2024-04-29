@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class ServicioAdministrador {
+    private double tarifaGlobal = 20.5;
     private PuntoDeControlDao puntoDeControlDao = new PuntoDeControlDao();
     private RutaDao rutaDao = new RutaDao();
     private ClienteDao clienteDao = new ClienteDao();
@@ -33,6 +34,9 @@ public class ServicioAdministrador {
         }
         if (puntoDeControlDao.obtenerPuntoControl(idPUuntoControl) != null) {
             throw ExcepcionApi.builder().code(HttpServletResponse.SC_CONFLICT).mensaje("El punto de control ya está registrado").build();
+        }
+        if (puntoDeControlEntidad.getTarifaOperacion() == 0) {
+            puntoDeControlEntidad.setTarifaOperacion(tarifaGlobal);
         }
         return puntoDeControlDao.crearPuntoControl(puntoDeControlEntidad);
     }

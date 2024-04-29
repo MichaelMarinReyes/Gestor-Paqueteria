@@ -32,7 +32,7 @@
 
       <div class="form-group">
         <label for="tarifaOperacion">Tarifa de Operación:</label>
-        <input type="text" id="tarifaOperacion" name="tarifaOperacion" v-model="tarifaOperacion" value="Q. " required>
+        <input type="text" id="tarifaOperacion" name="tarifaOperacion" v-model="tarifaOperacion" value="Q. ">
       </div>
 
       <div class="form-group">
@@ -78,12 +78,13 @@ export default {
       this.destinos = response.data;
     },
     async crearPuntoControl() {
-      if (!this.idPuntoControl || !this.nombre || !this.paquetesEnCola || !this.maximaEnCola || !this.tarifaOperacion) {
+      if (!this.idPuntoControl || !this.nombre || !this.paquetesEnCola || !this.maximaEnCola) {
         alert('Por favor completa todos los campos obligatorios.');
         return;
       }
 
       const idOperador = this.idOperador ? this.idOperador : 0;
+      const tarifaOperacion = this.tarifaOperacion.trim() !== '' ? this.tarifaOperacion : '0';
 
       try {
         const datosPuntoControl = {
@@ -91,7 +92,7 @@ export default {
           nombre: this.nombre,
           idOperador: idOperador,
           paquetesEnCola: this.paquetesEnCola,
-          tarifaOperacion: this.tarifaOperacion,
+          tarifaOperacion: tarifaOperacion,
           estado: this.estado,
           maximaEnCola: this.maximaEnCola
         };
@@ -99,7 +100,6 @@ export default {
         console.log('Datos a enviar ', datosPuntoControl);
 
         const response = await axios.post('http://localhost:8090/gestionar-puntos-de-control', datosPuntoControl);
-        console.log(response.status)
         if (response.status === 200) {
           alert('Punto de control creado correctamente');
           this.limpiarCampos()
